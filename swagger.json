@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "SPinitron v2",
+        "title": "Spinitron v2",
         "version": "1.0.0"
     },
     "host": "spinitron.com",
