@@ -21,10 +21,27 @@ specs = {
         "application/json",
         "application/xml"
     ],
+    "tags": [
+        {
+            "name": "Persona"
+        },
+        {
+            "name": "Show"
+        },
+        {
+            "name": "Playlist"
+        },
+        {
+            "name": "Spin"
+        }
+    ],
     "paths": {
         "/personas": {
             "get": {
                 "summary": "Get Personas",
+                "tags": [
+                    "Persona"
+                ],
                 "security": [
                     {
                         "Bearer": []
@@ -70,6 +87,9 @@ specs = {
         "/personas/{id}": {
             "get": {
                 "summary": "Get Persona by id",
+                "tags": [
+                    "Persona"
+                ],
                 "security": [
                     {
                         "Bearer": []
@@ -118,6 +138,9 @@ specs = {
         "/shows": {
             "get": {
                 "summary": "Get Shows either by range ({datetime} - {end}) or by {datetime} + {limit}.",
+                "tags": [
+                    "Show"
+                ],
                 "security": [
                     {
                         "Bearer": []
@@ -179,6 +202,9 @@ specs = {
         "/shows/{id|datetime}": {
             "get": {
                 "summary": "Get a Show by id or date/time",
+                "tags": [
+                    "Show"
+                ],
                 "security": [
                     {
                         "Bearer": []
@@ -227,6 +253,9 @@ specs = {
         "/playlists": {
             "get": {
                 "summary": "Get {limit} past Playlists starting from the current one or specified by {datetime}.",
+                "tags": [
+                    "Playlist"
+                ],
                 "security": [
                     {
                         "Bearer": []
@@ -287,6 +316,9 @@ specs = {
         "/playlists/current": {
             "get": {
                 "summary": "Get the current Playlist",
+                "tags": [
+                    "Playlist"
+                ],
                 "security": [
                     {
                         "Bearer": []
@@ -335,6 +367,9 @@ specs = {
         "/playlists/{id|datetime}": {
             "get": {
                 "summary": "Get a Playlist by id or date/time",
+                "tags": [
+                    "Playlist"
+                ],
                 "security": [
                     {
                         "Bearer": []
@@ -389,6 +424,9 @@ specs = {
         "/spins": {
             "get": {
                 "summary": "Get {limit} past Spins starting from the current one or specified by {datetime}.",
+                "tags": [
+                    "Spin"
+                ],
                 "security": [
                     {
                         "Bearer": []
@@ -453,6 +491,9 @@ specs = {
             },
             "post": {
                 "summary": "Log a Spin",
+                "tags": [
+                    "Spin"
+                ],
                 "description": "An endpoint for automation systems to log spins into the spin table.",
                 "security": [
                     {
@@ -532,6 +573,9 @@ specs = {
         "/spins/current": {
             "get": {
                 "summary": "Get the current Spin",
+                "tags": [
+                    "Spin"
+                ],
                 "security": [
                     {
                         "Bearer": []
@@ -574,6 +618,9 @@ specs = {
         "/spins/{id|datetime}": {
             "get": {
                 "summary": "Get a Spin by id or date/time",
+                "tags": [
+                    "Spin"
+                ],
                 "security": [
                     {
                         "Bearer": []
@@ -879,4 +926,4 @@ specs = {
             }
         }
     }
-};
+}
