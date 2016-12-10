@@ -54,4 +54,31 @@ class SpinCest
         $I->seeResponseIsJson();
         $I->seeResponseJsonMatchesJsonPath('$..id');
     }
+
+    public function getFilterByDatetimeTest(ApiTester $I) {
+
+    }
+
+    public function getFilterByShowTest(ApiTester $I) {
+
+    }
+
+    public function getFilterByPlaylistTest(ApiTester $I) {
+
+    }
+
+    public function getLimitTest(ApiTester $I) {
+        $I->sendGET('/spins', ['limit' => 5]);
+        $I->seeResponseCodeIs(HttpCode::OK);
+        $I->seeResponseIsJson();
+        $I->seeResponseJsonMatchesJsonPath('$.[4]');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.[5]');
+
+        $I->sendGET('/spins', ['limit' => 10]);
+        $I->seeResponseCodeIs(HttpCode::OK);
+        $I->seeResponseIsJson();
+        $I->seeResponseJsonMatchesJsonPath('$.[9]');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.[10]');
+
+    }
 }
