@@ -199,9 +199,9 @@ specs = {
                 }
             }
         },
-        "/shows/{id|datetime}": {
+        "/shows/{current|id|datetime}": {
             "get": {
-                "summary": "Get a Show by id or date/time",
+                "summary": "Get current Show or by id or date/time",
                 "tags": [
                     "Show"
                 ],
@@ -212,10 +212,11 @@ specs = {
                 ],
                 "parameters": [
                     {
-                        "name": "id|datetime",
+                        "name": "current|id|datetime",
                         "in": "path",
                         "required": true,
-                        "type": "string"
+                        "type": "string",
+                        "default": "current"
                     },
                     {
                         "name": "fields",
@@ -313,9 +314,9 @@ specs = {
                 }
             }
         },
-        "/playlists/current": {
+        "/playlists/{current|id|datetime}": {
             "get": {
-                "summary": "Get the current Playlist",
+                "summary": "Get current Playlist or by id or date/time",
                 "tags": [
                     "Playlist"
                 ],
@@ -326,61 +327,11 @@ specs = {
                 ],
                 "parameters": [
                     {
-                        "name": "show_id",
-                        "description": "Filter by show",
-                        "in": "query",
-                        "type": "integer"
-                    },
-                    {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The playlist",
-                        "schema": {
-                            "$ref": "#/definitions/Playlist"
-                        }
-                    },
-                    "404": {
-                        "description": "No playlists playing currently",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/playlists/{id|datetime}": {
-            "get": {
-                "summary": "Get a Playlist by id or date/time",
-                "tags": [
-                    "Playlist"
-                ],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "id|datetime",
+                        "name": "current|id|datetime",
                         "in": "path",
                         "required": true,
-                        "type": "string"
+                        "type": "string",
+                        "default": "current"
                     },
                     {
                         "name": "show_id",
@@ -570,52 +521,7 @@ specs = {
                 }
             }
         },
-        "/spins/current": {
-            "get": {
-                "summary": "Get the current Spin",
-                "tags": [
-                    "Spin"
-                ],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The spin",
-                        "schema": {
-                            "$ref": "#/definitions/Spin"
-                        }
-                    },
-                    "404": {
-                        "description": "No spins playing currently",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/spins/{id|datetime}": {
+        "/spins/{current|id|datetime}": {
             "get": {
                 "summary": "Get a Spin by id or date/time",
                 "tags": [
@@ -628,10 +534,11 @@ specs = {
                 ],
                 "parameters": [
                     {
-                        "name": "id|datetime",
+                        "name": "current|id|datetime",
                         "in": "path",
                         "required": true,
-                        "type": "string"
+                        "type": "string",
+                        "default": "current"
                     },
                     {
                         "name": "fields",
@@ -926,4 +833,4 @@ specs = {
             }
         }
     }
-}
+};

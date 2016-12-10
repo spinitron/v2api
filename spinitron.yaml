@@ -2,7 +2,7 @@
 # as a demonstration of an API spec in YAML
 swagger: '2.0'
 info:
-  title: SPinitron v2
+  title: Spinitron v2
   version: "1.0.0"
 # the domain of the service
 host: spinitron.com
@@ -130,7 +130,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Show'
-  /shows/[current|{id|datetime}]:
+  /shows/{current|id|datetime}:
     get:
       summary: Get current Show or by id or date/time
       tags:
@@ -138,10 +138,11 @@ paths:
       security:
         - Bearer: []
       parameters:
-        - name: id|datetime
+        - name: current|id|datetime
           in: path
           required: true
           type: string
+          default: current
         - name: fields
           in: query
           type: array
@@ -203,7 +204,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Playlist'
-  /playlists/[current|{id|datetime}]:
+  /playlists/{current|id|datetime}:
     get:
       summary: Get current Playlist or by id or date/time
       tags:
@@ -211,10 +212,11 @@ paths:
       security:
         - Bearer: []
       parameters:
-        - name: id|datetime
+        - name: current|id|datetime
           in: path
           required: true
           type: string
+          default: current
         - name: show_id
           description: Filter by show
           in: query
@@ -334,7 +336,7 @@ paths:
           description: Failed to create the object for unknown reason.
           schema:
             $ref: '#/definitions/Error'
-  /spins/[current|{id|datetime}}:
+  /spins/{current|id|datetime}:
     get:
       summary: Get a Spin by id or date/time
       tags:
@@ -342,10 +344,11 @@ paths:
       security:
         - Bearer: []
       parameters:
-        - name: id|datetime
+        - name: current|id|datetime
           in: path
           required: true
           type: string
+          default: current
         - name: fields
           in: query
           type: array
