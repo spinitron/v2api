@@ -35,4 +35,16 @@ class PersonaCest
         $I->seeResponseIsJson();
         $I->seeResponseJsonMatchesJsonPath('$.id');
     }
+
+    public function getByIdNotFoundTest(ApiTester $I)
+    {
+        $I->sendGET('/personas/1123213213123123');
+        $I->seeResponseCodeIs(\Codeception\Util\HttpCode::NOT_FOUND);
+    }
+
+    public function getByIdBadRequestTest(ApiTester $I)
+    {
+        $I->sendGET('/personas/asd');
+        $I->seeResponseCodeIs(\Codeception\Util\HttpCode::BAD_REQUEST);
+    }
 }
