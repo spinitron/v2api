@@ -1,0 +1,8 @@
+{
+  "name": "spinitron/v2api",
+  "require": {},
+  "require-dev": {
+    "codeception/codeception": "^2.2",
+    "flow/jsonpath": "^0.3.4"
+  }
+}
