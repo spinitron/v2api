@@ -1,7 +1,0 @@
-class_name: ApiTester
-modules:
-    enabled:
-        - \Helper\Api
-        - REST:
-            url: http://vm0.spinitron.com/api
-            depends: PhpBrowser
