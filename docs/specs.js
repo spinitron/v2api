@@ -137,7 +137,7 @@ specs = {
         },
         "/shows": {
             "get": {
-                "summary": "Get Shows either by range ({datetime} - {end}) or by {datetime} + {limit}.",
+                "summary": "Get Shows either by datetime range ({start} - {end} where both are optional) or by {date} to get all items for this date.\nResult may be optionally limited by {limit}.\n",
                 "tags": [
                     "Show"
                 ],
@@ -148,26 +148,33 @@ specs = {
                 ],
                 "parameters": [
                     {
-                        "name": "datetime",
-                        "description": "The datetime starting from shows must be returned.\n",
-                        "in": "query",
-                        "type": "string",
-                        "format": "date-time",
-                        "required": true
-                    },
-                    {
-                        "name": "limit",
-                        "description": "Amount of shows to return including the starting one.\n",
-                        "in": "query",
-                        "type": "integer",
-                        "minimum": 1
-                    },
-                    {
-                        "name": "end",
-                        "description": "End of the datetime range.\n",
+                        "name": "start",
+                        "description": "The datetime starting from items must be returned.\nIf only one of {start} or {end} is provided, it will be used as a starting point to fetch items.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
+                    },
+                    {
+                        "name": "end",
+                        "description": "The ending datetime.\nIf only one of {start} or {end} is provided, it will be used as a starting point to fetch items.\n",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "date",
+                        "description": "Filter the items by the provided date.\n",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    {
+                        "name": "limit",
+                        "description": "Amount of items to return.\n",
+                        "in": "query",
+                        "type": "integer",
+                        "default": 5,
+                        "minimum": 1
                     },
                     {
                         "name": "fields",
@@ -199,9 +206,9 @@ specs = {
                 }
             }
         },
-        "/shows/{current|id|datetime}": {
+        "/shows/{id}": {
             "get": {
-                "summary": "Get current Show or by id or date/time",
+                "summary": "Get a Show by",
                 "tags": [
                     "Show"
                 ],
@@ -212,12 +219,114 @@ specs = {
                 ],
                 "parameters": [
                     {
-                        "name": "current|id|datetime",
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The Show",
+                        "schema": {
+                            "$ref": "#/definitions/Show"
+                        }
+                    },
+                    "404": {
+                        "description": "Show not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/shows/datetime/{datetime}": {
+            "get": {
+                "summary": "Get a Show by date/time",
+                "tags": [
+                    "Show"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "datetime",
                         "in": "path",
                         "required": true,
                         "type": "string",
-                        "default": "current"
+                        "format": "date-time"
                     },
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The Show",
+                        "schema": {
+                            "$ref": "#/definitions/Show"
+                        }
+                    },
+                    "400": {
+                        "description": "Provided datetime is invalid",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Show not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/shows/current": {
+            "get": {
+                "summary": "Get a current (or most recent past) Show",
+                "tags": [
+                    "Show"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
                     {
                         "name": "fields",
                         "in": "query",
@@ -253,7 +362,7 @@ specs = {
         },
         "/playlists": {
             "get": {
-                "summary": "Get {limit} past Playlists starting from the current one or specified by {datetime}.",
+                "summary": "Get Playlists either by datetime range ({start} - {end} where both are optional) or by {date} to get all items for this date.\nResult may be optionally limited by {limit}. Only past Playlists will be returned.\n",
                 "tags": [
                     "Playlist"
                 ],
@@ -264,15 +373,29 @@ specs = {
                 ],
                 "parameters": [
                     {
-                        "name": "datetime",
-                        "description": "The datetime starting from playlists must be returned. If not provided the current playlist will be used.\n",
+                        "name": "start",
+                        "description": "The datetime starting from items must be returned.\nIf only one of {start} or {end} is provided, it will be used as a starting point to fetch items.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
                     },
                     {
+                        "name": "end",
+                        "description": "The ending datetime.\nIf only one of {start} or {end} is provided, it will be used as a starting point to fetch items.\n",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "date",
+                        "description": "Filter the items by the provided date.\n",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    {
                         "name": "limit",
-                        "description": "Amount of past playlists to return including the starting one.\n",
+                        "description": "Amount of items to return.\n",
                         "in": "query",
                         "type": "integer",
                         "default": 5,
@@ -314,9 +437,9 @@ specs = {
                 }
             }
         },
-        "/playlists/{current|id|datetime}": {
+        "/playlists/{id}": {
             "get": {
-                "summary": "Get current Playlist or by id or date/time",
+                "summary": "Get a Playlist by id",
                 "tags": [
                     "Playlist"
                 ],
@@ -327,11 +450,10 @@ specs = {
                 ],
                 "parameters": [
                     {
-                        "name": "current|id|datetime",
+                        "name": "id",
                         "in": "path",
                         "required": true,
-                        "type": "string",
-                        "default": "current"
+                        "type": "integer"
                     },
                     {
                         "name": "show_id",
@@ -372,9 +494,124 @@ specs = {
                 }
             }
         },
+        "/playlists/datetime/{datetime}": {
+            "get": {
+                "summary": "Get a Playlist by date/time",
+                "tags": [
+                    "Playlist"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "datetime",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "show_id",
+                        "description": "Filter by show",
+                        "in": "query",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The playlist",
+                        "schema": {
+                            "$ref": "#/definitions/Playlist"
+                        }
+                    },
+                    "400": {
+                        "description": "Provided datetime is invalid",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Playlist not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/playlists/current": {
+            "get": {
+                "summary": "Get a current (or most recent past) Playlist",
+                "tags": [
+                    "Playlist"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "show_id",
+                        "description": "Filter by show",
+                        "in": "query",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The playlist",
+                        "schema": {
+                            "$ref": "#/definitions/Playlist"
+                        }
+                    },
+                    "404": {
+                        "description": "Playlist not found, if there are no past playlists at all",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
         "/spins": {
             "get": {
-                "summary": "Get {limit} past Spins starting from the current one or specified by {datetime}.",
+                "summary": "Get Spins either by datetime range ({start} - {end} where both are optional) or by {date} to get all items for this date.\nResult may be optionally limited by {limit}. Only past Spins will be returned.\n",
                 "tags": [
                     "Spin"
                 ],
@@ -385,15 +622,29 @@ specs = {
                 ],
                 "parameters": [
                     {
-                        "name": "datetime",
-                        "description": "The datetime starting from spins must be returned. If not provided the current spin will be used.\n",
+                        "name": "start",
+                        "description": "The datetime starting from items must be returned.\nIf only one of {start} or {end} is provided, it will be used as a starting point to fetch items.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
                     },
                     {
+                        "name": "end",
+                        "description": "The ending datetime.\nIf only one of {start} or {end} is provided, it will be used as a starting point to fetch items.\n",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "date",
+                        "description": "Filter the items by the provided date.\n",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    {
                         "name": "limit",
-                        "description": "Amount of past spins to return including the starting one.\n",
+                        "description": "Amount of items to return.\n",
                         "in": "query",
                         "type": "integer",
                         "default": 5,
@@ -521,9 +772,9 @@ specs = {
                 }
             }
         },
-        "/spins/{current|id|datetime}": {
+        "/spins/{id}": {
             "get": {
-                "summary": "Get a Spin by id or date/time",
+                "summary": "Get a Spin by id",
                 "tags": [
                     "Spin"
                 ],
@@ -534,11 +785,10 @@ specs = {
                 ],
                 "parameters": [
                     {
-                        "name": "current|id|datetime",
+                        "name": "id",
                         "in": "path",
                         "required": true,
-                        "type": "string",
-                        "default": "current"
+                        "type": "integer"
                     },
                     {
                         "name": "fields",
@@ -566,6 +816,109 @@ specs = {
                     },
                     "404": {
                         "description": "Spin not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/spins/datetime/{datetime}": {
+            "get": {
+                "summary": "Get a Spin by date/time",
+                "tags": [
+                    "Spin"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "datetime",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The spin",
+                        "schema": {
+                            "$ref": "#/definitions/Spin"
+                        }
+                    },
+                    "400": {
+                        "description": "Provided datetime is invalid",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Spin not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/spins/current": {
+            "get": {
+                "summary": "Get a current (or most recent past) Spin",
+                "tags": [
+                    "Spin"
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The spin",
+                        "schema": {
+                            "$ref": "#/definitions/Spin"
+                        }
+                    },
+                    "404": {
+                        "description": "Spin not found, if there are no past spins at all",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
@@ -647,7 +1000,8 @@ specs = {
                 },
                 "since": {
                     "type": "string",
-                    "format": "date"
+                    "format": "date",
+                    "description": "UTC date, ISO-8601."
                 },
                 "url": {
                     "type": "string"
@@ -697,7 +1051,11 @@ specs = {
                 },
                 "start": {
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "description": "UTC datetime, ISO-8601."
+                },
+                "timezone": {
+                    "type": "string"
                 },
                 "duration_min": {
                     "type": "integer"
@@ -757,7 +1115,11 @@ specs = {
                 },
                 "spin_timestamp": {
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "description": "UTC datetime, ISO-8601."
+                },
+                "timezone": {
+                    "type": "string"
                 },
                 "spin_duration": {
                     "type": "integer"
@@ -833,4 +1195,4 @@ specs = {
             }
         }
     }
-};
+}
