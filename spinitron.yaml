@@ -38,16 +38,10 @@ paths:
           in: query
           type: string
           description: Filter by Persona name
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The personas
@@ -67,16 +61,8 @@ paths:
           in: path
           required: true
           type: integer
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The Persona
@@ -116,23 +102,10 @@ paths:
           in: query
           type: string
           format: date
-        - name: limit
-          description: |
-            Amount of items to return.
-          in: query
-          type: integer
-          default: 5
-          minimum: 1
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The shows
@@ -152,16 +125,8 @@ paths:
           in: path
           required: true
           type: integer
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The Show
@@ -184,16 +149,8 @@ paths:
           required: true
           type: string
           format: date-time
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The Show
@@ -215,16 +172,8 @@ paths:
       security:
         - Bearer: []
       parameters:
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The Show
@@ -264,27 +213,14 @@ paths:
           in: query
           type: string
           format: date
-        - name: limit
-          description: |
-            Amount of items to return.
-          in: query
-          type: integer
-          default: 5
-          minimum: 1
         - name: show_id
           description: Filter by show
           in: query
           type: integer
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The playlists
@@ -304,20 +240,8 @@ paths:
           in: path
           required: true
           type: integer
-        - name: show_id
-          description: Filter by show
-          in: query
-          type: integer
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The playlist
@@ -344,16 +268,8 @@ paths:
           description: Filter by show
           in: query
           type: integer
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The playlist
@@ -379,16 +295,8 @@ paths:
           description: Filter by show
           in: query
           type: integer
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The playlist
@@ -428,13 +336,6 @@ paths:
           in: query
           type: string
           format: date
-        - name: limit
-          description: |
-            Amount of items to return.
-          in: query
-          type: integer
-          default: 5
-          minimum: 1
         - name: playlist_id
           description: Filter by playlist
           in: query
@@ -443,16 +344,10 @@ paths:
           description: Filter by show
           in: query
           type: integer
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The spins
@@ -523,16 +418,8 @@ paths:
           in: path
           required: true
           type: integer
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The spin
@@ -555,16 +442,8 @@ paths:
           required: true
           type: string
           format: date-time
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The spin
@@ -586,16 +465,8 @@ paths:
       security:
         - Bearer: []
       parameters:
-        - name: fields
-          in: query
-          type: array
-          items:
-            type: string
-        - name: expand
-          in: query
-          type: array
-          items:
-            type: string
+        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters/expand'
       responses:
         200:
           description: The spin
@@ -605,6 +476,34 @@ paths:
           description: Spin not found, if there are no past spins at all
           schema:
             $ref: "#/definitions/Error"
+parameters:
+  limit:
+    name: limit
+    description: Amount of items to return
+    in: query
+    type: integer
+    default: 5
+    minimum: 1
+  page:
+    name: page
+    description: Offset, used together with limit
+    in: query
+    type: integer
+    minimum: 1
+  fields:
+    name: fields
+    description: Allows to select only needed fields
+    in: query
+    type: array
+    items:
+      type: string
+  expand:
+    name: expand
+    description: Allows to select extra fields
+    in: query
+    type: array
+    items:
+      type: string
 definitions:
   Persona:
     type: object

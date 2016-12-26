@@ -55,20 +55,16 @@ specs = {
                         "description": "Filter by Persona name"
                     },
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/limit"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/page"
+                    },
+                    {
+                        "$ref": "#/parameters/fields"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -103,20 +99,10 @@ specs = {
                         "type": "integer"
                     },
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/fields"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -169,28 +155,16 @@ specs = {
                         "format": "date"
                     },
                     {
-                        "name": "limit",
-                        "description": "Amount of items to return.\n",
-                        "in": "query",
-                        "type": "integer",
-                        "default": 5,
-                        "minimum": 1
+                        "$ref": "#/parameters/limit"
                     },
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/page"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/fields"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -225,20 +199,10 @@ specs = {
                         "type": "integer"
                     },
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/fields"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -277,20 +241,10 @@ specs = {
                         "format": "date-time"
                     },
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/fields"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -328,20 +282,10 @@ specs = {
                 ],
                 "parameters": [
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/fields"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -394,34 +338,22 @@ specs = {
                         "format": "date"
                     },
                     {
-                        "name": "limit",
-                        "description": "Amount of items to return.\n",
-                        "in": "query",
-                        "type": "integer",
-                        "default": 5,
-                        "minimum": 1
-                    },
-                    {
                         "name": "show_id",
                         "description": "Filter by show",
                         "in": "query",
                         "type": "integer"
                     },
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/limit"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/page"
+                    },
+                    {
+                        "$ref": "#/parameters/fields"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -456,26 +388,10 @@ specs = {
                         "type": "integer"
                     },
                     {
-                        "name": "show_id",
-                        "description": "Filter by show",
-                        "in": "query",
-                        "type": "integer"
+                        "$ref": "#/parameters/fields"
                     },
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -520,20 +436,10 @@ specs = {
                         "type": "integer"
                     },
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/fields"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -577,20 +483,10 @@ specs = {
                         "type": "integer"
                     },
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/fields"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -643,14 +539,6 @@ specs = {
                         "format": "date"
                     },
                     {
-                        "name": "limit",
-                        "description": "Amount of items to return.\n",
-                        "in": "query",
-                        "type": "integer",
-                        "default": 5,
-                        "minimum": 1
-                    },
-                    {
                         "name": "playlist_id",
                         "description": "Filter by playlist",
                         "in": "query",
@@ -663,20 +551,16 @@ specs = {
                         "type": "integer"
                     },
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/limit"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/page"
+                    },
+                    {
+                        "$ref": "#/parameters/fields"
+                    },
+                    {
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -791,20 +675,10 @@ specs = {
                         "type": "integer"
                     },
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/fields"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -843,20 +717,10 @@ specs = {
                         "format": "date-time"
                     },
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/fields"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -894,20 +758,10 @@ specs = {
                 ],
                 "parameters": [
                     {
-                        "name": "fields",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/fields"
                     },
                     {
-                        "name": "expand",
-                        "in": "query",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "$ref": "#/parameters/expand"
                     }
                 ],
                 "responses": {
@@ -924,6 +778,41 @@ specs = {
                         }
                     }
                 }
+            }
+        }
+    },
+    "parameters": {
+        "limit": {
+            "name": "limit",
+            "description": "Amount of items to return",
+            "in": "query",
+            "type": "integer",
+            "default": 5,
+            "minimum": 1
+        },
+        "page": {
+            "name": "page",
+            "description": "Offset, used together with limit",
+            "in": "query",
+            "type": "integer",
+            "minimum": 1
+        },
+        "fields": {
+            "name": "fields",
+            "description": "Allows to select only needed fields",
+            "in": "query",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "expand": {
+            "name": "expand",
+            "description": "Allows to select extra fields",
+            "in": "query",
+            "type": "array",
+            "items": {
+                "type": "string"
             }
         }
     },
