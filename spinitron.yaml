@@ -75,8 +75,7 @@ paths:
   /shows:
     get:
       summary: |
-        Get Shows either by datetime range ({start} - {end} where both are optional) or by {date} to get all items for this date.
-        Result may be optionally limited by {limit}.
+        Get Shows by datetime range ({start} - {end} where both are optional).
       tags:
         - Show
       security:
@@ -96,12 +95,6 @@ paths:
           in: query
           type: string
           format: date-time
-        - name: date
-          description: |
-            Filter the items by the provided date.
-          in: query
-          type: string
-          format: date
         - $ref: '#/parameters/limit'
         - $ref: '#/parameters/page'
         - $ref: '#/parameters/fields'
@@ -186,8 +179,7 @@ paths:
   /playlists:
     get:
       summary: |
-        Get Playlists either by datetime range ({start} - {end} where both are optional) or by {date} to get all items for this date.
-        Result may be optionally limited by {limit}. Only past Playlists will be returned.
+        Get Playlists by datetime range ({start} - {end} where both are optional). Only past Playlists will be returned.
       tags:
         - Playlist
       security:
@@ -207,12 +199,6 @@ paths:
           in: query
           type: string
           format: date-time
-        - name: date
-          description: |
-            Filter the items by the provided date.
-          in: query
-          type: string
-          format: date
         - name: show_id
           description: Filter by show
           in: query
@@ -309,8 +295,7 @@ paths:
   /spins:
     get:
       summary: |
-        Get Spins either by datetime range ({start} - {end} where both are optional) or by {date} to get all items for this date.
-        Result may be optionally limited by {limit}. Only past Spins will be returned.
+        Get Spins by datetime range ({start} - {end} where both are optional). Only past Spins will be returned.
       tags:
         - Spin
       security:
@@ -330,12 +315,6 @@ paths:
           in: query
           type: string
           format: date-time
-        - name: date
-          description: |
-            Filter the items by the provided date.
-          in: query
-          type: string
-          format: date
         - name: playlist_id
           description: Filter by playlist
           in: query

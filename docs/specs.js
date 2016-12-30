@@ -123,7 +123,7 @@ specs = {
         },
         "/shows": {
             "get": {
-                "summary": "Get Shows either by datetime range ({start} - {end} where both are optional) or by {date} to get all items for this date.\nResult may be optionally limited by {limit}.\n",
+                "summary": "Get Shows by datetime range ({start} - {end} where both are optional).\n",
                 "tags": [
                     "Show"
                 ],
@@ -146,13 +146,6 @@ specs = {
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
-                    },
-                    {
-                        "name": "date",
-                        "description": "Filter the items by the provided date.\n",
-                        "in": "query",
-                        "type": "string",
-                        "format": "date"
                     },
                     {
                         "$ref": "#/parameters/limit"
@@ -306,7 +299,7 @@ specs = {
         },
         "/playlists": {
             "get": {
-                "summary": "Get Playlists either by datetime range ({start} - {end} where both are optional) or by {date} to get all items for this date.\nResult may be optionally limited by {limit}. Only past Playlists will be returned.\n",
+                "summary": "Get Playlists by datetime range ({start} - {end} where both are optional). Only past Playlists will be returned.\n",
                 "tags": [
                     "Playlist"
                 ],
@@ -329,13 +322,6 @@ specs = {
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
-                    },
-                    {
-                        "name": "date",
-                        "description": "Filter the items by the provided date.\n",
-                        "in": "query",
-                        "type": "string",
-                        "format": "date"
                     },
                     {
                         "name": "show_id",
@@ -507,7 +493,7 @@ specs = {
         },
         "/spins": {
             "get": {
-                "summary": "Get Spins either by datetime range ({start} - {end} where both are optional) or by {date} to get all items for this date.\nResult may be optionally limited by {limit}. Only past Spins will be returned.\n",
+                "summary": "Get Spins by datetime range ({start} - {end} where both are optional). Only past Spins will be returned.\n",
                 "tags": [
                     "Spin"
                 ],
@@ -530,13 +516,6 @@ specs = {
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
-                    },
-                    {
-                        "name": "date",
-                        "description": "Filter the items by the provided date.\n",
-                        "in": "query",
-                        "type": "string",
-                        "format": "date"
                     },
                     {
                         "name": "playlist_id",
