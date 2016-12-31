@@ -75,7 +75,7 @@ paths:
   /shows:
     get:
       summary: |
-        Get Shows by datetime range ({start} - {end} where both are optional).
+        Get Shows optionally filtered by a datetime range ({start} - {end} where both are required).
       tags:
         - Show
       security:
@@ -84,14 +84,12 @@ paths:
         - name: start
           description: |
             The datetime starting from items must be returned.
-            If only one of {start} or {end} is provided, it will be used as a starting point to fetch items.
           in: query
           type: string
           format: date-time
         - name: end
           description: |
             The ending datetime.
-            If only one of {start} or {end} is provided, it will be used as a starting point to fetch items.
           in: query
           type: string
           format: date-time
@@ -179,7 +177,7 @@ paths:
   /playlists:
     get:
       summary: |
-        Get Playlists by datetime range ({start} - {end} where both are optional). Only past Playlists will be returned.
+        Get Playlists  optionally filtered by a datetime range ({start} - {end} where both are required). Only past Playlists will be returned.
       tags:
         - Playlist
       security:
@@ -188,14 +186,12 @@ paths:
         - name: start
           description: |
             The datetime starting from items must be returned.
-            If only one of {start} or {end} is provided, it will be used as a starting point to fetch items.
           in: query
           type: string
           format: date-time
         - name: end
           description: |
             The ending datetime.
-            If only one of {start} or {end} is provided, it will be used as a starting point to fetch items.
           in: query
           type: string
           format: date-time
@@ -295,7 +291,7 @@ paths:
   /spins:
     get:
       summary: |
-        Get Spins by datetime range ({start} - {end} where both are optional). Only past Spins will be returned.
+        Get Spins optionally filtered by a datetime range ({start} - {end} where both are required). Only past Spins will be returned.
       tags:
         - Spin
       security:
@@ -304,14 +300,12 @@ paths:
         - name: start
           description: |
             The datetime starting from items must be returned.
-            If only one of {start} or {end} is provided, it will be used as a starting point to fetch items.
           in: query
           type: string
           format: date-time
         - name: end
           description: |
             The ending datetime.
-            If only one of {start} or {end} is provided, it will be used as a starting point to fetch items.
           in: query
           type: string
           format: date-time

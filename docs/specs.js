@@ -123,7 +123,7 @@ specs = {
         },
         "/shows": {
             "get": {
-                "summary": "Get Shows by datetime range ({start} - {end} where both are optional).\n",
+                "summary": "Get Shows optionally filtered by a datetime range ({start} - {end} where both are required).\n",
                 "tags": [
                     "Show"
                 ],
@@ -135,14 +135,14 @@ specs = {
                 "parameters": [
                     {
                         "name": "start",
-                        "description": "The datetime starting from items must be returned.\nIf only one of {start} or {end} is provided, it will be used as a starting point to fetch items.\n",
+                        "description": "The datetime starting from items must be returned.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
                     },
                     {
                         "name": "end",
-                        "description": "The ending datetime.\nIf only one of {start} or {end} is provided, it will be used as a starting point to fetch items.\n",
+                        "description": "The ending datetime.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
@@ -299,7 +299,7 @@ specs = {
         },
         "/playlists": {
             "get": {
-                "summary": "Get Playlists by datetime range ({start} - {end} where both are optional). Only past Playlists will be returned.\n",
+                "summary": "Get Playlists  optionally filtered by a datetime range ({start} - {end} where both are required). Only past Playlists will be returned.\n",
                 "tags": [
                     "Playlist"
                 ],
@@ -311,14 +311,14 @@ specs = {
                 "parameters": [
                     {
                         "name": "start",
-                        "description": "The datetime starting from items must be returned.\nIf only one of {start} or {end} is provided, it will be used as a starting point to fetch items.\n",
+                        "description": "The datetime starting from items must be returned.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
                     },
                     {
                         "name": "end",
-                        "description": "The ending datetime.\nIf only one of {start} or {end} is provided, it will be used as a starting point to fetch items.\n",
+                        "description": "The ending datetime.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
@@ -493,7 +493,7 @@ specs = {
         },
         "/spins": {
             "get": {
-                "summary": "Get Spins by datetime range ({start} - {end} where both are optional). Only past Spins will be returned.\n",
+                "summary": "Get Spins optionally filtered by a datetime range ({start} - {end} where both are required). Only past Spins will be returned.\n",
                 "tags": [
                     "Spin"
                 ],
@@ -505,14 +505,14 @@ specs = {
                 "parameters": [
                     {
                         "name": "start",
-                        "description": "The datetime starting from items must be returned.\nIf only one of {start} or {end} is provided, it will be used as a starting point to fetch items.\n",
+                        "description": "The datetime starting from items must be returned.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
                     },
                     {
                         "name": "end",
-                        "description": "The ending datetime.\nIf only one of {start} or {end} is provided, it will be used as a starting point to fetch items.\n",
+                        "description": "The ending datetime.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
@@ -1060,4 +1060,4 @@ specs = {
             }
         }
     }
-}
+};
