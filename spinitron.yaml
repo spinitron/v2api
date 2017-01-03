@@ -4,6 +4,7 @@ swagger: '2.0'
 info:
   title: Spinitron v2
   version: "1.0.0"
+  description: Maximum limit is 200. Default limit is 20.
 # the domain of the service
 host: spinitron.com
 # array of all schemes that your API supports

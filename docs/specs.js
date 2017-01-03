@@ -2,7 +2,8 @@ specs = {
     "swagger": "2.0",
     "info": {
         "title": "Spinitron v2",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "description": "Maximum limit is 200. Default limit is 20."
     },
     "host": "spinitron.com",
     "schemes": [
