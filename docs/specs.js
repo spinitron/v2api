@@ -766,7 +766,7 @@ specs = {
             "description": "Amount of items to return",
             "in": "query",
             "type": "integer",
-            "default": 5,
+            "default": 20,
             "minimum": 1
         },
         "page": {
