@@ -136,7 +136,7 @@ specs = {
         },
         "/shows": {
             "get": {
-                "summary": "Get Shows optionally filtered by a datetime range ({start} - {end} where both are required), shows not beginning in the range but having duration enough to overlap with the provided range will be returned too.\nIf date range filter is used, response is denormalised, means there may be more than one same show item with only one difference: show begin datetime.\nShows in the response are in chonological order.\n",
+                "summary": "Get Shows optionally filtered by a datetime range ({start} - {end} where both must be maximum 1 hour in past), shows ending during the provided range will be returned too.\nTo get a show currently being live both {start} and {end} can be set to now datetime.\nIf date range filter is used (both {start} and {end}), response is denormalised, means there may be more than one same show item with only one difference: show start datetime.\nIf only {start} is provided, next instance of every show ending after the provided {start} will be returned.\nWithout specified {end} filter only one instance of each show will be in the response, and 'start' value will be the next relative to now or provided {start} datetime, when show will be live.\nShows in the response are in chonological order.\n",
                 "tags": [
                     "Show"
                 ],
@@ -148,14 +148,14 @@ specs = {
                 "parameters": [
                     {
                         "name": "start",
-                        "description": "The datetime starting from items must be returned.\n",
+                        "description": "The datetime starting from items must be returned. Maximum 1 hour in past.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
                     },
                     {
                         "name": "end",
-                        "description": "The ending datetime.\n",
+                        "description": "The ending datetime. Maximum 1 hour in past.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
@@ -194,6 +194,12 @@ specs = {
                                 }
                             ]
                         }
+                    },
+                    "422": {
+                        "description": "Invalid datetimes in filter: either too old or {end} is less than {start}.\n",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
                     }
                 }
             }
@@ -216,90 +222,6 @@ specs = {
                         "required": true,
                         "type": "integer"
                     },
-                    {
-                        "$ref": "#/parameters/fields"
-                    },
-                    {
-                        "$ref": "#/parameters/expand"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The Show",
-                        "schema": {
-                            "$ref": "#/definitions/Show"
-                        }
-                    },
-                    "404": {
-                        "description": "Show not found",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/shows/datetime/{datetime}": {
-            "get": {
-                "summary": "Get a Show by a current/future datetime. Past datetimes are not allowed.\n",
-                "tags": [
-                    "Show"
-                ],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "datetime",
-                        "in": "path",
-                        "required": true,
-                        "type": "string",
-                        "format": "date-time",
-                        "description": "Current/future datetime."
-                    },
-                    {
-                        "$ref": "#/parameters/fields"
-                    },
-                    {
-                        "$ref": "#/parameters/expand"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The Show",
-                        "schema": {
-                            "$ref": "#/definitions/Show"
-                        }
-                    },
-                    "400": {
-                        "description": "Provided datetime is invalid or in the past.",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    },
-                    "404": {
-                        "description": "Show not found",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/shows/current": {
-            "get": {
-                "summary": "Get a Show being currently on-air.",
-                "tags": [
-                    "Show"
-                ],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
                     {
                         "$ref": "#/parameters/fields"
                     },
@@ -812,7 +734,7 @@ specs = {
     },
     "parameters": {
         "limit": {
-            "name": "limit",
+            "name": "count",
             "description": "Amount of items to return",
             "in": "query",
             "type": "integer",
@@ -821,7 +743,7 @@ specs = {
         },
         "page": {
             "name": "page",
-            "description": "Offset, used together with limit",
+            "description": "Offset, used together with count",
             "in": "query",
             "type": "integer",
             "minimum": 1
@@ -855,23 +777,13 @@ specs = {
                 "name": {
                     "type": "string"
                 },
-                "role": {
-                    "type": "integer",
-                    "description": "0 - disabled, 11 - new user, 22 - user, 33 - editor, 44 - admin\n",
-                    "enum": [
-                        0,
-                        11,
-                        22,
-                        33,
-                        44
-                    ]
-                },
                 "bio": {
                     "type": "string"
                 },
                 "since": {
                     "type": "string",
-                    "format": "date"
+                    "format": "integer",
+                    "description": "Year"
                 },
                 "email": {
                     "type": "string"
@@ -904,8 +816,18 @@ specs = {
                 "id": {
                     "type": "integer"
                 },
-                "duration_min": {
-                    "type": "integer"
+                "start": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "UTC datetime, ISO-8601."
+                },
+                "duration": {
+                    "type": "integer",
+                    "description": "Duration in seconds"
+                },
+                "timezone": {
+                    "type": "string",
+                    "example": "America/Chicago"
                 },
                 "category": {
                     "type": "string"
@@ -918,8 +840,8 @@ specs = {
                 },
                 "since": {
                     "type": "string",
-                    "format": "date",
-                    "description": "UTC date, ISO-8601."
+                    "format": "integer",
+                    "description": "Year"
                 },
                 "url": {
                     "type": "string"
@@ -928,14 +850,6 @@ specs = {
                     "type": "boolean"
                 },
                 "img_show": {
-                    "type": "string"
-                },
-                "begin": {
-                    "type": "string",
-                    "format": "date-time",
-                    "description": "UTC datetime, ISO-8601."
-                },
-                "timezone": {
                     "type": "string"
                 },
                 "_links": {
@@ -977,11 +891,13 @@ specs = {
                     "format": "date-time",
                     "description": "UTC datetime, ISO-8601."
                 },
-                "timezone": {
-                    "type": "string"
+                "duration": {
+                    "type": "integer",
+                    "description": "Duration in seconds"
                 },
-                "duration_min": {
-                    "type": "integer"
+                "timezone": {
+                    "type": "string",
+                    "example": "America/Chicago"
                 },
                 "category": {
                     "type": "string"
@@ -1036,16 +952,18 @@ specs = {
                 "playlist_id": {
                     "type": "integer"
                 },
-                "spin_timestamp": {
+                "start": {
                     "type": "string",
                     "format": "date-time",
                     "description": "UTC datetime, ISO-8601."
                 },
-                "timezone": {
-                    "type": "string"
+                "duration": {
+                    "type": "integer",
+                    "description": "Duration in seconds"
                 },
-                "spin_duration": {
-                    "type": "integer"
+                "timezone": {
+                    "type": "string",
+                    "example": "America/Chicago"
                 },
                 "artist_name": {
                     "type": "string"
@@ -1063,6 +981,12 @@ specs = {
                     "type": "string"
                 },
                 "song_isrc": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "genre": {
                     "type": "string"
                 },
                 "_links": {

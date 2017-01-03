@@ -81,8 +81,11 @@ paths:
   /shows:
     get:
       summary: |
-        Get Shows optionally filtered by a datetime range ({start} - {end} where both are required), shows not beginning in the range but having duration enough to overlap with the provided range will be returned too.
-        If date range filter is used, response is denormalised, means there may be more than one same show item with only one difference: show begin datetime.
+        Get Shows optionally filtered by a datetime range ({start} - {end} where both must be maximum 1 hour in past), shows ending during the provided range will be returned too.
+        To get a show currently being live both {start} and {end} can be set to now datetime.
+        If date range filter is used (both {start} and {end}), response is denormalised, means there may be more than one same show item with only one difference: show start datetime.
+        If only {start} is provided, next instance of every show ending after the provided {start} will be returned.
+        Without specified {end} filter only one instance of each show will be in the response, and 'start' value will be the next relative to now or provided {start} datetime, when show will be live.
         Shows in the response are in chonological order.
       tags:
         - Show
@@ -91,13 +94,13 @@ paths:
       parameters:
         - name: start
           description: |
-            The datetime starting from items must be returned.
+            The datetime starting from items must be returned. Maximum 1 hour in past.
           in: query
           type: string
           format: date-time
         - name: end
           description: |
-            The ending datetime.
+            The ending datetime. Maximum 1 hour in past.
           in: query
           type: string
           format: date-time
@@ -117,6 +120,11 @@ paths:
                   type: array
                   items:
                     $ref: '#/definitions/Show'
+        422:
+          description: |
+            Invalid datetimes in filter: either too old or {end} is less than {start}.
+          schema:
+            $ref: '#/definitions/Error'
   /shows/{id}:
     get:
       summary: |
@@ -131,55 +139,6 @@ paths:
           in: path
           required: true
           type: integer
-        - $ref: '#/parameters/fields'
-        - $ref: '#/parameters/expand'
-      responses:
-        200:
-          description: The Show
-          schema:
-            $ref: '#/definitions/Show'
-        404:
-          description: Show not found
-          schema:
-            $ref: "#/definitions/Error"
-  /shows/datetime/{datetime}:
-    get:
-      summary: |
-        Get a Show by a current/future datetime. Past datetimes are not allowed.
-      tags:
-        - Show
-      security:
-        - Bearer: []
-      parameters:
-        - name: datetime
-          in: path
-          required: true
-          type: string
-          format: date-time
-          description: Current/future datetime.
-        - $ref: '#/parameters/fields'
-        - $ref: '#/parameters/expand'
-      responses:
-        200:
-          description: The Show
-          schema:
-            $ref: '#/definitions/Show'
-        400:
-          description: Provided datetime is invalid or in the past.
-          schema:
-            $ref: '#/definitions/Error'
-        404:
-          description: Show not found
-          schema:
-            $ref: "#/definitions/Error"
-  /shows/current:
-    get:
-      summary: Get a Show being currently on-air.
-      tags:
-        - Show
-      security:
-        - Bearer: []
-      parameters:
         - $ref: '#/parameters/fields'
         - $ref: '#/parameters/expand'
       responses:
@@ -478,7 +437,7 @@ paths:
             $ref: "#/definitions/Error"
 parameters:
   limit:
-    name: limit
+    name: count
     description: Amount of items to return
     in: query
     type: integer
@@ -486,7 +445,7 @@ parameters:
     minimum: 1
   page:
     name: page
-    description: Offset, used together with limit
+    description: Offset, used together with count
     in: query
     type: integer
     minimum: 1
@@ -512,21 +471,12 @@ definitions:
         type: integer
       name:
         type: string
-      role:
-        type: integer
-        description: |
-          0 - disabled, 11 - new user, 22 - user, 33 - editor, 44 - admin
-        enum:
-          - 0
-          - 11
-          - 22
-          - 33
-          - 44
       bio:
         type: string
       since:
         type: string
-        format: date
+        format: integer
+        description: Year
       email:
         type: string
       website:
@@ -547,8 +497,16 @@ definitions:
     properties:
       id:
         type: integer
-      duration_min:
+      start:
+        type: string
+        format: date-time
+        description: UTC datetime, ISO-8601.
+      duration:
         type: integer
+        description: Duration in seconds
+      timezone:
+        type: string
+        example: America/Chicago
       category:
         type: string
       title:
@@ -557,19 +515,13 @@ definitions:
         type: string
       since:
         type: string
-        format: date
-        description: UTC date, ISO-8601.
+        format: integer
+        description: Year
       url:
         type: string
       hide_dj:
         type: boolean
       img_show:
-        type: string
-      begin:
-        type: string
-        format: date-time
-        description: UTC datetime, ISO-8601.
-      timezone:
         type: string
       _links:
         type: object
@@ -597,10 +549,12 @@ definitions:
         type: string
         format: date-time
         description: UTC datetime, ISO-8601.
+      duration:
+        type: integer
+        description: Duration in seconds
       timezone:
         type: string
-      duration_min:
-        type: integer
+        example: America/Chicago
       category:
         type: string
       title:
@@ -636,14 +590,16 @@ definitions:
         type: integer
       playlist_id:
         type: integer
-      spin_timestamp:
+      start:
         type: string
         format: date-time
         description: UTC datetime, ISO-8601.
+      duration:
+        type: integer
+        description: Duration in seconds
       timezone:
         type: string
-      spin_duration:
-        type: integer
+        example: America/Chicago
       artist_name:
         type: string
       release_title:
@@ -655,6 +611,10 @@ definitions:
       song_composer:
         type: string
       song_isrc:
+        type: string
+      note:
+        type: string
+      genre:
         type: string
       _links:
         type: object
