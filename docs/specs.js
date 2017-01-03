@@ -71,10 +71,22 @@ specs = {
                     "200": {
                         "description": "The personas",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Persona"
-                            }
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/BaseIndexResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Persona"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -123,7 +135,7 @@ specs = {
         },
         "/shows": {
             "get": {
-                "summary": "Get Shows optionally filtered by a datetime range ({start} - {end} where both are required).\n",
+                "summary": "Get Shows optionally filtered by a datetime range ({start} - {end} where both are required), shows not beginning in the range but having duration enough to overlap with the provided range will be returned too.\nIf date range filter is used, response is denormalised, means there may be more than one same show item with only one difference: show begin datetime.\nShows in the response are in chonological order.\n",
                 "tags": [
                     "Show"
                 ],
@@ -164,10 +176,22 @@ specs = {
                     "200": {
                         "description": "The shows",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Show"
-                            }
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/BaseIndexResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Show"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -175,7 +199,7 @@ specs = {
         },
         "/shows/{id}": {
             "get": {
-                "summary": "Get a Show by",
+                "summary": "Get a Show by id. Next future begin datetime will be included in the response. \nIf show doesn't have any future dates (i.e. all schedules are ended), 404 will be returned.\n",
                 "tags": [
                     "Show"
                 ],
@@ -216,7 +240,7 @@ specs = {
         },
         "/shows/datetime/{datetime}": {
             "get": {
-                "summary": "Get a Show by date/time",
+                "summary": "Get a Show by a current/future datetime. Past datetimes are not allowed.\n",
                 "tags": [
                     "Show"
                 ],
@@ -231,7 +255,8 @@ specs = {
                         "in": "path",
                         "required": true,
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "description": "Current/future datetime."
                     },
                     {
                         "$ref": "#/parameters/fields"
@@ -248,7 +273,7 @@ specs = {
                         }
                     },
                     "400": {
-                        "description": "Provided datetime is invalid",
+                        "description": "Provided datetime is invalid or in the past.",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
@@ -264,7 +289,7 @@ specs = {
         },
         "/shows/current": {
             "get": {
-                "summary": "Get a current (or most recent past) Show",
+                "summary": "Get a Show being currently on-air.",
                 "tags": [
                     "Show"
                 ],
@@ -346,10 +371,22 @@ specs = {
                     "200": {
                         "description": "The playlists",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Playlist"
-                            }
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/BaseIndexResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Playlist"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -546,10 +583,22 @@ specs = {
                     "200": {
                         "description": "The spins",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Spin"
-                            }
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/BaseIndexResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/Spin"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -880,6 +929,14 @@ specs = {
                 "img_show": {
                     "type": "string"
                 },
+                "begin": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "UTC datetime, ISO-8601."
+                },
+                "timezone": {
+                    "type": "string"
+                },
                 "_links": {
                     "type": "object",
                     "properties": {
@@ -1051,11 +1108,44 @@ specs = {
                 }
             }
         },
+        "Pagination": {
+            "type": "object",
+            "properties": {
+                "totalCount": {
+                    "type": "integer"
+                },
+                "pageCount": {
+                    "type": "integer"
+                },
+                "currentPage": {
+                    "type": "integer"
+                },
+                "perPage": {
+                    "type": "integer"
+                }
+            }
+        },
         "Link": {
             "type": "object",
             "properties": {
                 "href": {
                     "type": "string"
+                }
+            }
+        },
+        "BaseIndexResponse": {
+            "type": "object",
+            "properties": {
+                "_links": {
+                    "type": "object",
+                    "properties": {
+                        "self": {
+                            "$ref": "#/definitions/Link"
+                        }
+                    }
+                },
+                "_meta": {
+                    "$ref": "#/definitions/Pagination"
                 }
             }
         }
