@@ -918,6 +918,9 @@ specs = {
                 "hide_dj": {
                     "type": "boolean"
                 },
+                "image": {
+                    "type": "string"
+                },
                 "automation": {
                     "type": "boolean"
                 },

@@ -568,6 +568,8 @@ definitions:
         type: string
       hide_dj:
         type: boolean
+      image:
+        type: string
       automation:
         type: boolean
       episode_name:
