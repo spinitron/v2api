@@ -791,7 +791,7 @@ specs = {
                 "website": {
                     "type": "string"
                 },
-                "img_profile": {
+                "image": {
                     "type": "string"
                 },
                 "_links": {
@@ -849,7 +849,7 @@ specs = {
                 "hide_dj": {
                     "type": "boolean"
                 },
-                "img_show": {
+                "image": {
                     "type": "string"
                 },
                 "_links": {
@@ -965,22 +965,22 @@ specs = {
                     "type": "string",
                     "example": "America/Chicago"
                 },
-                "artist_name": {
+                "artist": {
                     "type": "string"
                 },
-                "release_title": {
+                "release": {
                     "type": "string"
                 },
-                "label_name": {
+                "label": {
                     "type": "string"
                 },
-                "song_name": {
+                "song": {
                     "type": "string"
                 },
-                "song_composer": {
+                "composer": {
                     "type": "string"
                 },
-                "song_isrc": {
+                "isrc": {
                     "type": "string"
                 },
                 "note": {
