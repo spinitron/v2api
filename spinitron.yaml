@@ -80,13 +80,36 @@ paths:
             $ref: "#/definitions/Error"
   /shows:
     get:
-      summary: |
-        Get Shows optionally filtered by a datetime range ({start} - {end} where both must be maximum 1 hour in past), shows ending during the provided range will be returned too.
-        To get a show currently being live both {start} and {end} can be set to now datetime.
-        If date range filter is used (both {start} and {end}), response is denormalised, means there may be more than one same show item with only one difference: show start datetime.
-        If only {start} is provided, next instance of every show ending after the provided {start} will be returned.
-        Without specified {end} filter only one instance of each show will be in the response, and 'start' value will be the next relative to now or provided {start} datetime, when show will be live.
-        Shows in the response are in chonological order.
+      summary: Returns scheduled shows optionally filtered by {start} and/or {end} datetimes
+      description: |
+        **Terminology**: Spinitron defines a *show* as a radio program. A show can have one or more *schedules*,
+        each of which may specify either an *occurence* or a *repetition*, which represents a set of occurences.
+        Thus scheduled shows have occurences that, for example, may be displayed in a calendar.
+
+        In the response, `items` is an array of objects representing occurences of scheduled shows.
+
+        You may optionally filter `items` to a datetime *range* by including in the request {start} and/or {end}
+        parameters, both of which must be no more than one hour in the past. An occurence starting at {end} is
+        included in the reponse.
+
+        `itmes` can include occurences that begin *or* end within the filter range. A show that goes on air before
+        {start} appears in `items` if it ends *after* but not *at* {start}. An occurence starting at or before {end}
+        is included.
+
+        If the request omits the {start} parameter, the server sets its value to the current time so that the filter
+        range's start is always defined. If the request specifies {end} then the requested range is *bounded*,
+        otherwise it is *unbounded*.
+
+        For a bounded request, `items` includes *every* occurence of all shows occuring in the range. The only
+        difference between objects in `items` representing a given show will be the `start` field value.
+
+        For an unbounded request, `items` includes *only one* occurence per show, specifically, the
+        next occurrence after {start} of all shows occuring after {start}.
+
+        Use an unbounded request to get a straight list all shows. Use a bounded request to get a calendar/agenda
+        of shows expanded into occurrences by thir shedules and repetitions.
+
+        Objects in `items` are ordered first by `datetime` and then by `id`.
       tags:
         - Show
       security:
@@ -127,9 +150,12 @@ paths:
             $ref: '#/definitions/Error'
   /shows/{id}:
     get:
-      summary: |
-        Get a Show by id. Next future begin datetime will be included in the response.
-        If show doesn't have any future dates (i.e. all schedules are ended), 404 will be returned.
+      summary: Get a Show by id
+      description: |
+        The response object represents the next occurence of the show specified by {id}.
+
+        Status 404 is returned if a show with {id} does not exist or if it does but all its scheduled occurences
+        elapsed in the past.
       tags:
         - Show
       security:
