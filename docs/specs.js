@@ -136,7 +136,8 @@ specs = {
         },
         "/shows": {
             "get": {
-                "summary": "Get Shows optionally filtered by a datetime range ({start} - {end} where both must be maximum 1 hour in past), shows ending during the provided range will be returned too.\nTo get a show currently being live both {start} and {end} can be set to now datetime.\nIf date range filter is used (both {start} and {end}), response is denormalised, means there may be more than one same show item with only one difference: show start datetime.\nIf only {start} is provided, next instance of every show ending after the provided {start} will be returned.\nWithout specified {end} filter only one instance of each show will be in the response, and 'start' value will be the next relative to now or provided {start} datetime, when show will be live.\nShows in the response are in chonological order.\n",
+                "summary": "Returns scheduled shows optionally filtered by {start} and/or {end} datetimes",
+                "description": "**Terminology**: Spinitron defines a *show* as a radio program. A show can have one or more *schedules*,\neach of which may specify either an *occurence* or a *repetition*, which represents a set of occurences.\nThus scheduled shows have occurences that, for example, may be displayed in a calendar.\n\nIn the response, `items` is an array of objects representing occurences of scheduled shows.\n\nYou may optionally filter `items` to a datetime *range* by including in the request {start} and/or {end}\nparameters, both of which must be no more than one hour in the past. An occurence starting at {end} is\nincluded in the reponse.\n\n`itmes` can include occurences that begin *or* end within the filter range. A show that goes on air before\n{start} appears in `items` if it ends *after* but not *at* {start}. An occurence starting at or before {end}\nis included.\n\nIf the request omits the {start} parameter, the server sets its value to the current time so that the filter\nrange's start is always defined. If the request specifies {end} then the requested range is *bounded*,\notherwise it is *unbounded*.\n\nFor a bounded request, `items` includes *every* occurence of all shows occuring in the range. The only\ndifference between objects in `items` representing a given show will be the `start` field value.\n\nFor an unbounded request, `items` includes *only one* occurence per show, specifically, the\nnext occurrence after {start} of all shows occuring after {start}.\n\nUse an unbounded request to get a straight list all shows. Use a bounded request to get a calendar/agenda\nof shows expanded into occurrences by thir shedules and repetitions.\n\nObjects in `items` are ordered first by `datetime` and then by `id`.\n",
                 "tags": [
                     "Show"
                 ],
@@ -206,7 +207,8 @@ specs = {
         },
         "/shows/{id}": {
             "get": {
-                "summary": "Get a Show by id. Next future begin datetime will be included in the response. \nIf show doesn't have any future dates (i.e. all schedules are ended), 404 will be returned.\n",
+                "summary": "Get a Show by id",
+                "description": "The response object represents the next occurence of the show specified by {id}.\n\nStatus 404 is returned if a show with {id} does not exist or if it does but all its scheduled occurences\nelapsed in the past.\n",
                 "tags": [
                     "Show"
                 ],
