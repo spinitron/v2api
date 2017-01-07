@@ -208,7 +208,7 @@ specs = {
         "/shows/{id}": {
             "get": {
                 "summary": "Get a Show by id",
-                "description": "The response object represents the next occurence of the show specified by {id}.\n\nStatus 404 is returned if a show with {id} does not exist or if it does but all its scheduled occurences\nelapsed in the past.\n",
+                "description": "The response object represents the next occurence of the show specified by {id}.\n\nStatus 404 is returned if a show with {id} does not exist or if it does but all its scheduled occurences elapsed in the past.\n",
                 "tags": [
                     "Show"
                 ],
@@ -239,7 +239,7 @@ specs = {
                         }
                     },
                     "404": {
-                        "description": "Show not found",
+                        "description": "Show not found or too old",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
@@ -249,7 +249,8 @@ specs = {
         },
         "/playlists": {
             "get": {
-                "summary": "Get Playlists  optionally filtered by a datetime range ({start} - {end} where both are required). Only past Playlists will be returned.\n",
+                "summary": "Returns playlists optionally filtered by {start} and/or {end} datetimes",
+                "description": "Get Playlists optionally filtered by a datetime range. \nOnly past Playlists will be returned (with allowed tolerance equals 1 hour in future). \n\nOrdered chronologically from newest to oldest.\n",
                 "tags": [
                     "Playlist"
                 ],
@@ -261,14 +262,14 @@ specs = {
                 "parameters": [
                     {
                         "name": "start",
-                        "description": "The datetime starting from items must be returned.\n",
+                        "description": "The datetime starting from items must be returned. Maximum 1 hour in future.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
                     },
                     {
                         "name": "end",
-                        "description": "The ending datetime.\n",
+                        "description": "The ending datetime. Maximum 1 hour in future.\n",
                         "in": "query",
                         "type": "string",
                         "format": "date-time"
@@ -320,6 +321,7 @@ specs = {
         "/playlists/{id}": {
             "get": {
                 "summary": "Get a Playlist by id",
+                "description": "The response object represents the playlist specified by {id}.\n\nStatus 404 is returned if a playlist with {id} does not exist or if it does but starts in the future (with allowed tolerance equals 1 hour in future).\n",
                 "tags": [
                     "Playlist"
                 ],
@@ -350,102 +352,7 @@ specs = {
                         }
                     },
                     "404": {
-                        "description": "Playlist not found",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/playlists/datetime/{datetime}": {
-            "get": {
-                "summary": "Get a Playlist by date/time",
-                "tags": [
-                    "Playlist"
-                ],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "datetime",
-                        "in": "path",
-                        "required": true,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    {
-                        "name": "show_id",
-                        "description": "Filter by show",
-                        "in": "query",
-                        "type": "integer"
-                    },
-                    {
-                        "$ref": "#/parameters/fields"
-                    },
-                    {
-                        "$ref": "#/parameters/expand"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The playlist",
-                        "schema": {
-                            "$ref": "#/definitions/Playlist"
-                        }
-                    },
-                    "400": {
-                        "description": "Provided datetime is invalid",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    },
-                    "404": {
-                        "description": "Playlist not found",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/playlists/current": {
-            "get": {
-                "summary": "Get a current (or most recent past) Playlist",
-                "tags": [
-                    "Playlist"
-                ],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "show_id",
-                        "description": "Filter by show",
-                        "in": "query",
-                        "type": "integer"
-                    },
-                    {
-                        "$ref": "#/parameters/fields"
-                    },
-                    {
-                        "$ref": "#/parameters/expand"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The playlist",
-                        "schema": {
-                            "$ref": "#/definitions/Playlist"
-                        }
-                    },
-                    "404": {
-                        "description": "Playlist not found, if there are no past playlists at all",
+                        "description": "Playlist not found or is in the future",
                         "schema": {
                             "$ref": "#/definitions/Error"
                         }
