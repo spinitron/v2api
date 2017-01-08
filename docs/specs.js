@@ -362,7 +362,8 @@ specs = {
         },
         "/spins": {
             "get": {
-                "summary": "Get Spins optionally filtered by a datetime range ({start} - {end} where both are required). Only past Spins will be returned.\n",
+                "summary": "Returns spins optionally filtered by {start} and/or {end} datetimes",
+                "description": "Get Spins optionally filtered by a datetime range. Only past Spins will be returned.\n",
                 "tags": [
                     "Spin"
                 ],
@@ -556,89 +557,6 @@ specs = {
                     }
                 }
             }
-        },
-        "/spins/datetime/{datetime}": {
-            "get": {
-                "summary": "Get a Spin by date/time",
-                "tags": [
-                    "Spin"
-                ],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "datetime",
-                        "in": "path",
-                        "required": true,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    {
-                        "$ref": "#/parameters/fields"
-                    },
-                    {
-                        "$ref": "#/parameters/expand"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The spin",
-                        "schema": {
-                            "$ref": "#/definitions/Spin"
-                        }
-                    },
-                    "400": {
-                        "description": "Provided datetime is invalid",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    },
-                    "404": {
-                        "description": "Spin not found",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/spins/current": {
-            "get": {
-                "summary": "Get a current (or most recent past) Spin",
-                "tags": [
-                    "Spin"
-                ],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "$ref": "#/parameters/fields"
-                    },
-                    {
-                        "$ref": "#/parameters/expand"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The spin",
-                        "schema": {
-                            "$ref": "#/definitions/Spin"
-                        }
-                    },
-                    "404": {
-                        "description": "Spin not found, if there are no past spins at all",
-                        "schema": {
-                            "$ref": "#/definitions/Error"
-                        }
-                    }
-                }
-            }
         }
     },
     "parameters": {
@@ -730,6 +648,11 @@ specs = {
                     "format": "date-time",
                     "description": "UTC datetime, ISO-8601."
                 },
+                "end": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "UTC datetime, ISO-8601."
+                },
                 "duration": {
                     "type": "integer",
                     "description": "Duration in seconds"
@@ -800,6 +723,11 @@ specs = {
                     "format": "date-time",
                     "description": "UTC datetime, ISO-8601."
                 },
+                "end": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "UTC datetime, ISO-8601."
+                },
                 "duration": {
                     "type": "integer",
                     "description": "Duration in seconds"
@@ -865,6 +793,11 @@ specs = {
                     "type": "integer"
                 },
                 "start": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "UTC datetime, ISO-8601."
+                },
+                "end": {
                     "type": "string",
                     "format": "date-time",
                     "description": "UTC datetime, ISO-8601."
