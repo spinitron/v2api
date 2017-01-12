@@ -449,45 +449,45 @@ specs = {
                 ],
                 "parameters": [
                     {
-                        "name": "spin_timestamp",
+                        "name": "start",
                         "in": "formData",
                         "type": "string",
                         "format": "date-time"
                     },
                     {
-                        "name": "spin_duration",
+                        "name": "duration",
                         "in": "formData",
                         "type": "integer"
                     },
                     {
-                        "name": "artist_name",
+                        "name": "artist",
                         "in": "formData",
                         "type": "string",
                         "required": true
                     },
                     {
-                        "name": "release_title",
+                        "name": "release",
                         "in": "formData",
                         "type": "string"
                     },
                     {
-                        "name": "label_name",
+                        "name": "label",
                         "in": "formData",
                         "type": "string"
                     },
                     {
-                        "name": "song_name",
+                        "name": "song",
                         "in": "formData",
                         "type": "string",
                         "required": true
                     },
                     {
-                        "name": "song_composer",
+                        "name": "composer",
                         "in": "formData",
                         "type": "string"
                     },
                     {
-                        "name": "song_isrc",
+                        "name": "isrc",
                         "in": "formData",
                         "type": "string"
                     }
@@ -697,10 +697,7 @@ specs = {
                             }
                         },
                         "playlists": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Link"
-                            }
+                            "$ref": "#/definitions/Link"
                         }
                     }
                 }
@@ -777,6 +774,9 @@ specs = {
                             "$ref": "#/definitions/Link"
                         },
                         "show": {
+                            "$ref": "#/definitions/Link"
+                        },
+                        "spins": {
                             "$ref": "#/definitions/Link"
                         }
                     }
