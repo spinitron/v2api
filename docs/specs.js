@@ -661,6 +661,9 @@ specs = {
                     "type": "string",
                     "example": "America/Chicago"
                 },
+                "one_off": {
+                    "type": "boolean"
+                },
                 "category": {
                     "type": "string"
                 },
