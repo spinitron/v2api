@@ -449,6 +449,12 @@ specs = {
                 ],
                 "parameters": [
                     {
+                        "name": "live",
+                        "in": "formData",
+                        "type": "boolean",
+                        "description": "Only when automation params are configured with the \"Pass through\" mode.\nEnables \"live assist\" mode. Default mode is \"full automation\".\n"
+                    },
+                    {
                         "name": "start",
                         "in": "formData",
                         "type": "string",
