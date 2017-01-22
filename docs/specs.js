@@ -17,7 +17,7 @@ specs = {
             "in": "header"
         }
     },
-    "basePath": "/api",
+    "basePath": "/v2/api",
     "produces": [
         "application/json",
         "application/xml"
