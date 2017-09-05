@@ -324,6 +324,9 @@ paths:
         - name: label
           in: formData
           type: string
+        - name: genre
+          in: formData
+          type: string
         - name: song
           in: formData
           type: string
