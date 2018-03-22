@@ -2,10 +2,10 @@ openapi: 3.0.0
 servers:
   - url: 'https://spinitron.com/api'
 info:
-  title: Spinitron v2
+  title: Spinitron v2 API
   version: 1.0.0
   description: |
-    # Notes
+    ## Notes
 
     **Tutorial demo** using this API is at [https://spinitron.com/v2-api-demo/](https://spinitron.com/v2-api-demo/). For web integration using iframes and/or JavaScript instead of an API, see [https://spinitron.github.io/v2-web-integration/](https://spinitron.github.io/v2-web-integration/).
 
@@ -27,8 +27,6 @@ info:
     generate example cURL requests but not to get responses from Spinitron. We
     do not accept queries sent from web browsers. Copy-paste the cURL commands
     and run them from your computer.
-
-    **A live tutorial [demo](https://spinitron.com/v2-api-demo/)** using PHP is available.
 
     **Cache** the data you get from the API if you are using it in web or mobile integration. It's not ok to query the API on *every* page request you serve. The [demo](https://spinitron.com/v2-api-demo/) shows how easy it can be to implement a file cache.
 
