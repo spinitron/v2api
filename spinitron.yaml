@@ -5,7 +5,7 @@ info:
   title: Spinitron v2
   version: 1.0.0
   description: |
-    ## Notes
+    # Notes
 
     **Tutorial demo** using this API is at [https://spinitron.com/v2-api-demo/](https://spinitron.com/v2-api-demo/). For web integration using iframes and/or JavaScript instead of an API, see [https://spinitron.github.io/v2-web-integration/](https://spinitron.github.io/v2-web-integration/).
 
@@ -25,7 +25,7 @@ info:
 
     **Try it out** below works to
     generate example cURL requests but not to get responses from Spinitron. We
-    do not accept queries send from web browsers. Copy-paste the cURL commands
+    do not accept queries sent from web browsers. Copy-paste the cURL commands
     and run them from your computer.
 
     **A live tutorial [demo](https://spinitron.com/v2-api-demo/)** using PHP is available.
