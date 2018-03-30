@@ -606,10 +606,10 @@ components:
           description: HTML-formatted biography
           example: <p>Besides DJ'ing industrial and experimental music since 1991, Deftly has performed in industrial ...
         since:
-          type: string
+          type: integer
           format: year
           description: Since what year has the DJ/host been at the station?
-          example: '"1991"'
+          example: 1991
         email:
           type: string
           format: email
@@ -618,6 +618,8 @@ components:
         website:
           type: string
           format: url
+          description: URL to web site for the DJ/host
+          example: "https://spinitron.com/example/doesnt/exist"
         image:
           type: string
           format: url
@@ -673,13 +675,15 @@ components:
           description: HTML-formatted description of the playlist or program/show
           example: <p>Since 2001, <strong>The High Voltage Circumcision</strong> show has delivered a full spectrum barrage of dark hard and experimental music from industrial to noise to idm to ebm to bizarre to audio collage often with a side of live guests, social consciousness, interviews, twisted humor, studio experiments and left turns.</p>
         since:
-          type: string
+          type: integer
           format: year
           description: Since what year has the program/show existed?
-          example: '"2001"'
+          example: 2001
         url:
           type: string
           format: url
+          description: URL to web site for the program/show
+          example: "https://spinitron.com/example/doesnt/exist"
         hide_dj:
           type: boolean
           description: Should the client application hide information about the show's DJs/hosts?
@@ -742,14 +746,14 @@ components:
           description: HTML-formatted description of the playlist or program/show
           example: It is a <em>cross-­cultural musical journey united in voices and rhythms</em>.
         since:
-          type: string
+          type: integer
           format: year
           description: Since what year has the program/show existed?
-          example: '"1999"'
+          example: 1999
         url:
           type: string
           format: url
-          description: A URL that the DJ/host provides
+          description: URL to web site for the playlist or program/show
         hide_dj:
           type: boolean
           description: Should the client application hide information about the playlist's DJ/host?
