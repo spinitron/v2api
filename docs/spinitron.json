@@ -361,6 +361,14 @@
             }
           },
           {
+            "name": "persona_id",
+            "description": "Filter by persona",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
             "$ref": "#/components/parameters/limit"
           },
           {
