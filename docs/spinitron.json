@@ -1099,6 +1099,12 @@
             "description": "Station's time zone",
             "example": "America/Chicago"
           },
+          "image": {
+            "type": "string",
+            "description": "Cover art",
+            "format": "url",
+            "example": "https://is5-ssl.mzstatic.com/image/thumb/Music3/v4/ef/e8/67/efe8674e-467a-adfe-9f67-8d50860b4f1e/dj.sokyjuyt.jpg/170x170bb.jpg"
+          },
           "classical": {
             "type": "boolean",
             "description": "Is the track's metadata schema \"classical\" rather than \"popular\"?",
