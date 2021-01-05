@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-01-05T20:40:47.721Z" agent="5.0 (Windows)" etag="vnvoDfT4y-aVEgPZ2uwL" version="14.1.8" type="github">
+<mxfile host="app.diagrams.net" modified="2021-01-05T20:55:41.004Z" agent="5.0 (Windows)" etag="kPHzmrt60C7yNq5qXiO1" version="14.1.8" type="github">
   <diagram id="icT79BqDyMPT690cw6SL" name="Page-1">
     <mxGraphModel dx="687" dy="365" grid="1" gridSize="5" guides="0" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -202,6 +202,9 @@
             <mxPoint x="623" y="506" as="sourcePoint" />
             <mxPoint x="600" y="506" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="-P2CWIfBhK16tqXoN2Xe-78" value="&lt;div&gt;Action at 12th fret is fixed by specs. 12th fret is half way between nut and bridge.&lt;/div&gt;&lt;div&gt;Assume neck deflection at 12th fret due to truss rod adjustment is negligible (neck is &lt;br&gt;&lt;/div&gt;&lt;div&gt;bolted at 16th fret). So after truss rod adjustment the change in bridge height must &lt;br&gt;&lt;/div&gt;&lt;div&gt;be equal and opposite to the neck deflection at the nut caused by the truss rod adjustment.&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;fontSize=8;fontFamily=Helvetica;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="118" y="530" width="340" height="70" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
