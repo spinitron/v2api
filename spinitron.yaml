@@ -1,6 +1,6 @@
 openapi: 3.0.0
 servers:
-- url: 'https://spinitron.com/api'
+  - url: 'https://spinitron.com/api'
 info:
   title: Spinitron v2 API
   version: 1.0.0
@@ -32,29 +32,30 @@ info:
 
     An extension to this API with access to all stations for partner applications is available. Contact us.
 tags:
-- name: Persona
-- name: Show
-- name: Playlist
-- name: Spin
+  - name: Persona
+  - name: Show
+  - name: Playlist
+  - name: Spin
+  - name: Non-music item
 security:
-- httpBearer: []
-- accessToken: []
+  - httpBearer: []
+  - accessToken: []
 paths:
   /personas:
     get:
       summary: Get Personas
       tags:
-      - Persona
+        - Persona
       parameters:
-      - name: name
-        in: query
-        description: Filter by Persona name
-        schema:
-          type: string
-      - $ref: '#/components/parameters/limit'
-      - $ref: '#/components/parameters/page'
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: name
+          in: query
+          description: Filter by Persona name
+          schema:
+            type: string
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The personas
@@ -62,36 +63,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Persona'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Persona'
             application/xml:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Persona'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Persona'
   '/personas/{id}':
     get:
       summary: Get Persona by id
       tags:
-      - Persona
+        - Persona
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The Persona
@@ -179,28 +180,28 @@ paths:
 
         Objects in `items` are ordered first by `datetime` and then by `id`.
       tags:
-      - Show
+        - Show
 
       parameters:
-      - name: start
-        description: >
-          The datetime starting from items must be returned. Maximum 1 hour in
-          past.
-        in: query
-        schema:
-          type: string
-          format: date-time
-      - name: end
-        description: |
-          The ending datetime. Maximum 1 hour in past.
-        in: query
-        schema:
-          type: string
-          format: date-time
-      - $ref: '#/components/parameters/limit'
-      - $ref: '#/components/parameters/page'
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: start
+          description: >
+            The datetime starting from items must be returned. Maximum 1 hour in
+            past.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: end
+          description: |
+            The ending datetime. Maximum 1 hour in past.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The shows
@@ -208,23 +209,23 @@ paths:
             application/json:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Show'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Show'
             application/xml:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Show'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Show'
         '422':
           description: >
             Invalid datetimes in filter: either too old or {end} is less than
@@ -247,16 +248,16 @@ paths:
         Status 404 is returned if a show with {id} does not exist or if it does
         but all its scheduled occurences elapsed in the past.
       tags:
-      - Show
+        - Show
 
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The Show
@@ -288,38 +289,38 @@ paths:
 
         Ordered chronologically from newest to oldest.
       tags:
-      - Playlist
+        - Playlist
 
       parameters:
-      - name: start
-        description: >
-          The datetime starting from items must be returned. Maximum 1 hour in
-          future.
-        in: query
-        schema:
-          type: string
-          format: date-time
-      - name: end
-        description: |
-          The ending datetime. Maximum 1 hour in future.
-        in: query
-        schema:
-          type: string
-          format: date-time
-      - name: show_id
-        description: Filter by show
-        in: query
-        schema:
-          type: integer
-      - name: persona_id
-        description: Filter by persona
-        in: query
-        schema:
-          type: integer
-      - $ref: '#/components/parameters/limit'
-      - $ref: '#/components/parameters/page'
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: start
+          description: >
+            The datetime starting from items must be returned. Maximum 1 hour in
+            future.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: end
+          description: |
+            The ending datetime. Maximum 1 hour in future.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: show_id
+          description: Filter by show
+          in: query
+          schema:
+            type: integer
+        - name: persona_id
+          description: Filter by persona
+          in: query
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The playlists
@@ -327,23 +328,23 @@ paths:
             application/json:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Playlist'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Playlist'
             application/xml:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Playlist'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Playlist'
   '/playlists/{id}':
     get:
       summary: Get a Playlist by id
@@ -355,16 +356,16 @@ paths:
         does but starts in the future (with allowed tolerance equals 1 hour in
         future).
       tags:
-      - Playlist
+        - Playlist
 
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The playlist
@@ -391,37 +392,37 @@ paths:
         Get Spins optionally filtered by a datetime range. Only past Spins will
         be returned.
       tags:
-      - Spin
+        - Spin
 
       parameters:
-      - name: start
-        description: |
-          The datetime starting from items must be returned.
-        in: query
-        schema:
-          type: string
-          format: date-time
-      - name: end
-        description: |
-          The ending datetime.
-        in: query
-        schema:
-          type: string
-          format: date-time
-      - name: playlist_id
-        description: Filter by playlist
-        in: query
-        schema:
-          type: integer
-      - name: show_id
-        description: Filter by show
-        in: query
-        schema:
-          type: integer
-      - $ref: '#/components/parameters/limit'
-      - $ref: '#/components/parameters/page'
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: start
+          description: |
+            The datetime starting from items must be returned.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: end
+          description: |
+            The ending datetime.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: playlist_id
+          description: Filter by playlist
+          in: query
+          schema:
+            type: integer
+        - name: show_id
+          description: Filter by show
+          in: query
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The spins
@@ -429,27 +430,27 @@ paths:
             application/json:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Spin'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Spin'
             application/xml:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Spin'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Spin'
     post:
       summary: Log a Spin
       tags:
-      - Spin
+        - Spin
       description: An endpoint for automation systems to log spins into the spin table.
       responses:
         '201':
@@ -517,22 +518,22 @@ paths:
                 isrc:
                   type: string
               required:
-              - artist
-              - song
+                - artist
+                - song
   '/spins/{id}':
     get:
       summary: Get a Spin by id
       tags:
-      - Spin
+        - Spin
 
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The spin
@@ -545,6 +546,98 @@ paths:
                 $ref: '#/components/schemas/Spin'
         '404':
           description: Spin not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /non-music-items:
+    get:
+      summary: 'Returns public non-music items optionally filtered by {start} and/or {end} datetimes'
+      description: >
+        Get public non-music items optionally filtered by a datetime range. Only past non-music items will be returned.
+      tags:
+        - Non-music item
+
+      parameters:
+        - name: start
+          description: |
+            Return items with timestamps at or after this datetime. If not given, the current server time is assumed.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: end
+          description: |
+            The ending datetime.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: playlist_id
+          description: Filter by playlist
+          in: query
+          schema:
+            type: integer
+        - name: show_id
+          description: Filter by show
+          in: query
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: The Non-music items
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/NonMusicItem'
+            application/xml:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/NonMusicItem'
+  '/non-music-items/{id}':
+    get:
+      summary: 'Get a Non-music item by id'
+      tags:
+        - Non-music item
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: The Non-music item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonMusicItem'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/NonMusicItem'
+        '404':
+          description: Non-music item not found
           content:
             application/json:
               schema:
@@ -919,6 +1012,40 @@ components:
               $ref: '#/components/schemas/Link'
             playlist:
               $ref: '#/components/schemas/Link'
+    NonMusicItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 8017277
+        playlist_id:
+          type: integer
+          example: 336722
+        start:
+          type: string
+          format: date-time
+          description: UTC datetime ISO-8601
+          example: 2018-03-30T13:07:08+0000
+        end:
+          type: string
+          format: date-time
+          description: UTC datetime ISO-8601
+          example: 2018-03-30T13:10:25+0000
+        duration:
+          type: integer
+          description: Duration in seconds
+          example: 199
+        timezone:
+          type: string
+          description: Station's time zone
+          example: America/Chicago
+        title:
+          type: string
+          description: Title of Non-music item
+          example: Mic break
+        description:
+          type: string
+          description: Description of Non-music item
     ValidationError:
       type: object
       properties:
