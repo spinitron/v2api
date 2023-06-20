@@ -555,9 +555,9 @@ paths:
                 $ref: '#/components/schemas/Error'
   /non-music-items:
     get:
-      summary: 'Returns non-music items optionally filtered by {start} and/or {end} datetimes'
+      summary: 'Returns public non-music items optionally filtered by {start} and/or {end} datetimes'
       description: >
-        Get non-music items optionally filtered by a datetime range. Only past non-music items will be returned.
+        Get public non-music items optionally filtered by a datetime range. Only past non-music items will be returned.
       tags:
         - Non-music item
 
@@ -1042,10 +1042,9 @@ components:
         title:
           type: string
           description: Title of Non-music item
-          example: Apple Records
+          example: Mic break
         description:
           type: string
-          description: Description of Non-music item
           example: Apple Records
     ValidationError:
       type: object

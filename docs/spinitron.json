@@ -759,8 +759,8 @@
     },
     "/non-music-items": {
       "get": {
-        "summary": "Returns non-music items optionally filtered by {start} and/or {end} datetimes",
-        "description": "Get non-music items optionally filtered by a datetime range. Only past non-music items will be returned.\n",
+        "summary": "Returns public non-music items optionally filtered by {start} and/or {end} datetimes",
+        "description": "Get public non-music items optionally filtered by a datetime range. Only past non-music items will be returned.\n",
         "tags": [
           "Non-music item"
         ],
@@ -1427,7 +1427,7 @@
           "title": {
             "type": "string",
             "description": "Title of Non-music item",
-            "example": "Apple Records"
+            "example": "Mic break"
           },
           "description": {
             "type": "string",
