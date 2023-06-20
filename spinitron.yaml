@@ -613,7 +613,7 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/NonMusicItem'
-  '/non-music-items/id':
+  '/non-music-items/{id}':
     get:
       summary: 'Get a Non-music item by id'
       tags:
@@ -1045,7 +1045,7 @@ components:
           example: Mic break
         description:
           type: string
-          example: Apple Records
+          description: Description of Non-music item
     ValidationError:
       type: object
       properties:

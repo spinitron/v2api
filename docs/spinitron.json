@@ -24,7 +24,7 @@
       "name": "Spin"
     },
     {
-      "name":"Non-music item"
+      "name": "Non-music item"
     }
   ],
   "security": [
@@ -767,7 +767,7 @@
         "parameters": [
           {
             "name": "start",
-            "description": "Return items with timestamps at or after this datetime. If not given, the current server time is assumed.",
+            "description": "Return items with timestamps at or after this datetime. If not given, the current server time is assumed.\n",
             "in": "query",
             "schema": {
               "type": "string",
