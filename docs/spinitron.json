@@ -22,6 +22,9 @@
     },
     {
       "name": "Spin"
+    },
+    {
+      "name":"Non-music item"
     }
   ],
   "security": [
@@ -753,6 +756,160 @@
           }
         }
       }
+    },
+    "/non-music-items": {
+      "get": {
+        "summary": "Returns non-music items optionally filtered by {start} and/or {end} datetimes",
+        "description": "Get non-music items optionally filtered by a datetime range. Only past non-music items will be returned.\n",
+        "tags": [
+          "Non-music item"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "description": "The datetime starting from items must be returned.\n",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end",
+            "description": "The ending datetime.\n",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "playlist_id",
+            "description": "Filter by playlist",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "show_id",
+            "description": "Filter by show",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Non-music items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/BaseIndexResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/NonMusicItem"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/BaseIndexResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/NonMusicItem"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/non-music-items/{id}": {
+      "get": {
+        "summary": "Get a Non-music item by id",
+        "tags": [
+          "Non-music item"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/fields"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Non-music item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NonMusicItem"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/NonMusicItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Non-music item not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1231,6 +1388,50 @@
                 "$ref": "#/components/schemas/Link"
               }
             }
+          }
+        }
+      },
+      "NonMusicItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 8017277
+          },
+          "playlist_id": {
+            "type": "integer",
+            "example": 336722
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "description": "UTC datetime ISO-8601",
+            "example": "2018-03-30T13:07:08+0000"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "UTC datetime ISO-8601",
+            "example": "2018-03-30T13:10:25+0000"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Duration in seconds",
+            "example": 199
+          },
+          "timezone": {
+            "type": "string",
+            "description": "Station's time zone",
+            "example": "America/Chicago"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of Non-music item",
+            "example": "Apple Records"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of Non-music item"
           }
         }
       },
