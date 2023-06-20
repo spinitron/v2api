@@ -767,7 +767,7 @@
         "parameters": [
           {
             "name": "start",
-            "description": "The datetime starting from items must be returned.\n",
+            "description": "Return items with timestamps at or after this datetime. If not given, the current server time is assumed.",
             "in": "query",
             "schema": {
               "type": "string",
