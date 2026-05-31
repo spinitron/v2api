@@ -140,7 +140,7 @@ paths:
         included in the reponse.
 
 
-        `itmes` can include occurences that begin *or* end within the filter
+        `items` can include occurences that begin *or* end within the filter
         range. A show that goes on air before
 
         {start} appears in `items` if it ends *after* but not *at* {start}. An
