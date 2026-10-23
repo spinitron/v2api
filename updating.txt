@@ -1,0 +1,35 @@
+UPDATE SPINITRON DOCS
+
+Edit `spinitron.yaml`.
+
+https://editor.swagger.io/ can be useful, it checks for errors and gives a live preview.
+Copy-paste the yaml back here when done editing.
+
+From this directory, make the JSON Swagger UI serves:
+
+    python make-json.py
+
+That writes `docs/spinitron.json` and keeps `$ref` as `$ref`. It needs PyYAML (`pip install pyyaml`).
+
+Do not use a converter that resolves the spec. That inlines every `$ref`.
+
+
+UPDATE SWAGGER STUFF
+
+Download the latest release (the built one) of Swagger-UI from https://github.com/swagger-api/swagger-ui/releases/latest
+
+Copy only these files from that release's `/dist` into `/docs` here:
+
+- `favicon-16x16.png`
+- `favicon-32x32.png`
+- `index.css`
+- `index.html`
+- `swagger-ui.css`
+- `swagger-ui-bundle.js`
+- `swagger-ui-standalone-preset.js`
+
+Leave the rest of `/dist`. That includes every `*.map`, `swagger-ui-es-bundle.js`, `swagger-ui-es-bundle-core.js`, `swagger-ui.js`, and `oauth2-redirect.html`. This page does not load them.
+
+Do not replace `swagger-initializer.js`. That file is local. `index.html` from `/dist` loads it. It points `url` at `spinitron.json`, and Try it out shows a curl command instead of calling the API. Authorize is removed, so an API key is not entered in the browser. The command uses `YOURAPIKEY`. Replace that and run it on your computer.
+
+See also https://swagger.io/docs/open-source-tools/swagger-ui/usage/installation/#plain-old-htmlcssjs-standalone

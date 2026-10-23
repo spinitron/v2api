@@ -8,7 +8,7 @@
   "info": {
     "title": "Spinitron v2 API",
     "version": "1.0.0",
-    "description": "## Notes\n\n**Tutorial demo** using this API is at [https://spinitron.com/v2-api-demo/](https://spinitron.com/v2-api-demo/). For web integration using iframes and/or JavaScript instead of an API, see [https://spinitron.github.io/v2-web-integration/](https://spinitron.github.io/v2-web-integration/).\n\n**Your API key** is found in the Spinitron web app. Log in to Spinitron and go to *Automation & API* in the *Admin* menu.\n\n**Authenticate** by presenting your API key using either HTTP Bearer Authorization\n(preferred)\n\n    curl -H 'Authorization: Bearer YOURAPIKEY' 'https://spinitron.com/api/spins'\n\nor in the query parameter `access-token` (less secure owing to webserver\nlog files)\n\n    curl 'https://spinitron.com/api/spins?access-token=YOURAPIKEY'\n\n**Limit** per page of results is 20 by default and miximally 200.\n\n**Try it out** below works to\ngenerate example cURL requests but not to get responses from Spinitron. We\ndo not accept queries sent from web browsers. Copy-paste the cURL commands\nand run them from your computer.\n\n**Cache** the data you get from the API if you are using it in web or mobile integration. It's not ok to query the API on *every* page request you serve. The [demo](https://spinitron.com/v2-api-demo/) shows how easy it can be to implement a file cache.\n\nAn extension to this API with access to all stations for partner applications is available. Contact us.\n"
+    "description": "## Notes\n\n**Tutorial demo** using this API is at [https://spinitron.com/v2-api-demo/](https://spinitron.com/v2-api-demo/). For web integration using iframes and/or JavaScript instead of an API, see [https://spinitron.github.io/v2-web-integration/](https://spinitron.github.io/v2-web-integration/).\n\n**Your API key** is in the Spinitron web app. Log in to Spinitron and go to *Automation & API* in the *Admin* menu.\n\n**Authenticate** by presenting your API key with HTTP Bearer authorization\n\n    curl -H 'Authorization: Bearer YOURAPIKEY' 'https://spinitron.com/api/spins'\n\nAlternatively auth with query parameter `access-token`. Use Bearer auth if you can as keys in URLs are more risky. Starting October 2026, URLs in responses do not include access-token.\n\n**Page size** is 20 by default and 200 at most.\n\n**Try it out** below generates example cURL requests but does not get responses from Spinitron. Copy the cURL commands and run them on your computer.\n\n**Cache** data you get from the API when you use it in a web or mobile integration. Do not query the API on *every* page request you serve. The [demo](https://spinitron.com/v2-api-demo/) shows how to implement a file cache.\n"
   },
   "tags": [
     {
@@ -168,15 +168,15 @@
     },
     "/shows": {
       "get": {
-        "summary": "Returns scheduled shows optionally filtered by {start} and/or {end} datetimes",
-        "description": "**Terminology**: Spinitron defines a *show* as a radio program. A show can have one or more *schedules*,\neach of which may specify either an *occurence* or a *repetition*, which represents a set of occurences.\nThus scheduled shows have occurences that, for example, may be displayed in a calendar.\n\nIn the response, `items` is an array of objects representing occurences of scheduled shows.\n\nYou may optionally filter `items` to a datetime *range* by including in the request {start} and/or {end}\nparameters, both of which must be no more than one hour in the past. An occurence starting at {end} is\nincluded in the reponse.\n\n`itmes` can include occurences that begin *or* end within the filter range. A show that goes on air before\n{start} appears in `items` if it ends *after* but not *at* {start}. An occurence starting at or before {end}\nis included.\n\nIf the request omits the {start} parameter, the server sets its value to the current time so that the filter\nrange's start is always defined. If the request specifies {end} then the requested range is *bounded*,\notherwise it is *unbounded*.\n\nFor a bounded request, `items` includes *every* occurence of all shows occuring in the range. The only\ndifference between objects in `items` representing a given show will be the `start` field value.\n\nFor an unbounded request, `items` includes *only one* occurence per show, specifically, the\nnext occurrence after {start} of all shows occuring after {start}.\n\nUse an unbounded request to get a straight list all shows. Use a bounded request to get a calendar/agenda\nof shows expanded into occurrences by thir shedules and repetitions.\n\nObjects in `items` are ordered first by `datetime` and then by `id`.\n",
+        "summary": "Returns scheduled shows optionally filtered by `{start}` and/or `{end}` date-times",
+        "description": "In Spinitron, shows have recurrences which describe how the shows repeat in the overall program schedule. A recurrence expands over a period of time into a series of instances. Each instance corresponds to an episode of a show.\n\nThere are two ways to search the program schedule using `GET /shows`:\n1. **With** the query parameter `{end}` - returns **all** matching instances of shows up to the given end time.\n\n2. **Without** the `{end}` query parameter -\n    returns **only the first** instance of each matching show.\n\nRequest form **1** is useful to build displays of upcoming episodes of a show. For example `GET /shows?end=+1week` returns all the episodes of shows from now to one week from now. You could iterate the response items and convert them to boxes in a grid.\n\nRequest form **2** without `{end}` is unbounded – there's no limit to the number of matching instances – so it returns only the first instance for each matching show. Useful to make an alphabetical list fo shows, for example.\n\nIn the response, `items` is an array of objects, each object representing one instance of a scheduled show.\n\n`{start}` and/or `{end}` parameters must be no more than one hour in the past. An instance starting at `{end}` is included in the response. `items` can include instances that begin *or* end within the requested range. An instance that goes on air before `{start}` appears in `items` if it ends *after* but not *at* `{start}`. An instance starting at or before `{end}` is included.\n\nIf the request omits the `{start}` parameter, the server sets its value to the current time so that the filter range's start is always defined.\n\nObjects in `items` are ordered first by `datetime` and then by `id`.\n",
         "tags": [
           "Show"
         ],
         "parameters": [
           {
             "name": "start",
-            "description": "The datetime starting from items must be returned. Maximum 1 hour in past.\n",
+            "description": "Datetime from which to return items. At most 1 hour in the past.\n",
             "in": "query",
             "schema": {
               "type": "string",
@@ -185,7 +185,7 @@
           },
           {
             "name": "end",
-            "description": "The ending datetime. Maximum 1 hour in past.\n",
+            "description": "End datetime. At most 1 hour in the past.\n",
             "in": "query",
             "schema": {
               "type": "string",
@@ -252,7 +252,7 @@
             }
           },
           "422": {
-            "description": "Invalid datetimes in filter: either too old or {end} is less than {start}.\n",
+            "description": "Invalid datetimes in the filter: they are too old, or `{end}` is earlier than `{start}`.\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -272,7 +272,7 @@
     "/shows/{id}": {
       "get": {
         "summary": "Get a Show by id",
-        "description": "The response object represents the next occurence of the show specified by {id}.\n\nStatus 404 is returned if a show with {id} does not exist or if it does but all its scheduled occurences elapsed in the past.\n",
+        "description": "The response object represents the next instance (episode) of the show specified by `{id}`.\n\nStatus 404 is returned if a show with `{id}` does not exist or if it does but all its scheduled instances have elapsed.\n",
         "tags": [
           "Show"
         ],
@@ -329,14 +329,14 @@
     "/playlists": {
       "get": {
         "summary": "Returns playlists optionally filtered by {start} and/or {end} datetimes",
-        "description": "Get Playlists optionally filtered by a datetime range.\nOnly past Playlists will be returned (with allowed tolerance equals 1 hour in future).\n\nOrdered chronologically from newest to oldest.\n",
+        "description": "Get playlists, optionally filtered by a datetime range.\nOnly past playlists are returned. A playlist up to 1 hour in the future is included. Ordered from newest to oldest.\n\nWith `future=1`, returns playlists that have not ended and are marked for public display before they air, including ones currently on air. `start` and `end` do not filter that result. Ordered from soonest to latest.\n",
         "tags": [
           "Playlist"
         ],
         "parameters": [
           {
             "name": "start",
-            "description": "The datetime starting from items must be returned. Maximum 1 hour in future.\n",
+            "description": "Datetime from which to return items. At most 1 hour in the future.\n",
             "in": "query",
             "schema": {
               "type": "string",
@@ -345,7 +345,7 @@
           },
           {
             "name": "end",
-            "description": "The ending datetime. Maximum 1 hour in future.\n",
+            "description": "End datetime. At most 1 hour in the future.\n",
             "in": "query",
             "schema": {
               "type": "string",
@@ -366,6 +366,17 @@
             "in": "query",
             "schema": {
               "type": "integer"
+            }
+          },
+          {
+            "name": "future",
+            "description": "Set to `1` to list playlists that have not ended and are marked \"Display as a future public playlist\", including ones currently on air. `show_id` and `persona_id` still apply. `start` and `end` do not filter this result. Ordered from soonest to latest. Any other value leaves the default past-playlist list.\n",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1
+              ]
             }
           },
           {
@@ -433,7 +444,7 @@
     "/playlists/{id}": {
       "get": {
         "summary": "Get a Playlist by id",
-        "description": "The response object represents the playlist specified by {id}.\n\nStatus 404 is returned if a playlist with {id} does not exist or if it does but starts in the future (with allowed tolerance equals 1 hour in future).\n",
+        "description": "The response object represents the playlist specified by `{id}`.\n\nStatus 404 is returned if a playlist with `{id}` does not exist, or if it exists but starts more than 1 hour in the future.\n",
         "tags": [
           "Playlist"
         ],
@@ -470,7 +481,7 @@
             }
           },
           "404": {
-            "description": "Playlist not found or is in the future",
+            "description": "Playlist not found, or it is in the future",
             "content": {
               "application/json": {
                 "schema": {
@@ -497,7 +508,7 @@
         "parameters": [
           {
             "name": "start",
-            "description": "The datetime starting from items must be returned.\n",
+            "description": "Datetime from which to return items.\n",
             "in": "query",
             "schema": {
               "type": "string",
@@ -598,7 +609,7 @@
         "description": "An endpoint for automation systems to log spins into the spin table.",
         "responses": {
           "201": {
-            "description": "The new created Spin.",
+            "description": "The newly created spin.",
             "content": {
               "application/json": {
                 "schema": {
@@ -634,7 +645,7 @@
             }
           },
           "default": {
-            "description": "Failed to create the object for unknown reason.",
+            "description": "Failed to create the spin for an unknown reason.",
             "content": {
               "application/json": {
                 "schema": {
@@ -759,7 +770,7 @@
     "parameters": {
       "limit": {
         "name": "count",
-        "description": "Amount of items to return",
+        "description": "Number of items to return",
         "in": "query",
         "schema": {
           "type": "integer",
@@ -778,7 +789,7 @@
       },
       "fields": {
         "name": "fields",
-        "description": "Allows to select only needed fields",
+        "description": "Return only these fields",
         "in": "query",
         "schema": {
           "type": "array",
@@ -789,7 +800,7 @@
       },
       "expand": {
         "name": "expand",
-        "description": "Allows to select extra fields",
+        "description": "Include these extra fields",
         "in": "query",
         "schema": {
           "type": "array",
@@ -813,7 +824,7 @@
     },
     "schemas": {
       "Persona": {
-        "description": "The `Persona` object describes a radio DJ/host. One person can have multiple personas",
+        "description": "The `Persona` object describes a radio DJ/host. One person can have multiple personas.",
         "type": "object",
         "properties": {
           "id": {
@@ -845,7 +856,7 @@
           "website": {
             "type": "string",
             "format": "url",
-            "description": "URL to web site for the DJ/host",
+            "description": "Website URL for the DJ/host",
             "example": "https://spinitron.com/example/doesnt/exist"
           },
           "image": {
@@ -871,7 +882,7 @@
       },
       "Show": {
         "type": "object",
-        "description": "A `Show` object describes one occurrence of a radio program. A result set may contain multiple occurrences of the same show with difference `start` and `end` values.",
+        "description": "A `Show` object describes one instance (episode) of a radio program. A result set may contain multiple instances of the same show with different `start` and `end` values.",
         "properties": {
           "id": {
             "type": "integer",
@@ -880,13 +891,13 @@
           "start": {
             "type": "string",
             "format": "date-time",
-            "description": "UTC datetime ISO-8601",
+            "description": "UTC datetime in ISO-8601",
             "example": "2018-04-02T23:00:00+0000"
           },
           "end": {
             "type": "string",
             "format": "date-time",
-            "description": "UTC datetime ISO-8601",
+            "description": "UTC datetime in ISO-8601",
             "example": "2018-04-03T02:00:00+0000"
           },
           "duration": {
@@ -928,7 +939,7 @@
           "url": {
             "type": "string",
             "format": "url",
-            "description": "URL to web site for the program/show",
+            "description": "Website URL for the program/show",
             "example": "https://spinitron.com/example/doesnt/exist"
           },
           "hide_dj": {
@@ -978,13 +989,13 @@
           "start": {
             "type": "string",
             "format": "date-time",
-            "description": "UTC datetime ISO-8601",
+            "description": "UTC datetime in ISO-8601",
             "example": "2018-03-30T13:00:00+0000"
           },
           "end": {
             "type": "string",
             "format": "date-time",
-            "description": "UTC datetime ISO-8601",
+            "description": "UTC datetime in ISO-8601",
             "example": "2018-03-30T14:00:00+0000"
           },
           "duration": {
@@ -1010,7 +1021,7 @@
           "description": {
             "type": "string",
             "description": "HTML-formatted description of the playlist or program/show",
-            "example": "It is a <em>cross-\u00adcultural musical journey united in voices and rhythms</em>."
+            "example": "It is a <em>cross-­cultural musical journey united in voices and rhythms</em>."
           },
           "since": {
             "type": "integer",
@@ -1021,7 +1032,7 @@
           "url": {
             "type": "string",
             "format": "url",
-            "description": "URL to web site for the playlist or program/show"
+            "description": "Website URL for the playlist or program/show"
           },
           "hide_dj": {
             "type": "boolean",
@@ -1035,7 +1046,7 @@
           },
           "automation": {
             "type": "boolean",
-            "description": "Was the playlist created playlists created by a radio station automation system?",
+            "description": "Was this playlist created by a station automation system?",
             "example": false
           },
           "episode_name": {
@@ -1080,13 +1091,13 @@
           "start": {
             "type": "string",
             "format": "date-time",
-            "description": "UTC datetime ISO-8601",
+            "description": "UTC datetime in ISO-8601",
             "example": "2018-03-30T13:07:08+0000"
           },
           "end": {
             "type": "string",
             "format": "date-time",
-            "description": "UTC datetime ISO-8601",
+            "description": "UTC datetime in ISO-8601",
             "example": "2018-03-30T13:10:25+0000"
           },
           "duration": {
@@ -1151,7 +1162,7 @@
           },
           "medium": {
             "type": "string",
-            "description": "Media format in which the sound recording was reased",
+            "description": "Media format in which the sound recording was released",
             "example": "7\""
           },
           "genre": {
@@ -1165,7 +1176,7 @@
           },
           "note": {
             "type": "string",
-            "description": "HTML-formatted DJ annotation of the spin, can include images etc.",
+            "description": "HTML-formatted DJ annotation of the spin. It can include images.",
             "example": "B-side of the <strong>original</strong> 7\" vinyl in the station's collection."
           },
           "request": {
@@ -1190,7 +1201,7 @@
           },
           "conductor": {
             "type": "string",
-            "description": "For classical music, conducor of the ensemble",
+            "description": "For classical music, conductor of the ensemble",
             "example": "Herbert von Karajan"
           },
           "performers": {

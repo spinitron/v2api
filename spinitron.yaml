@@ -1,60 +1,70 @@
 openapi: 3.0.0
 servers:
-- url: 'https://spinitron.com/api'
+  - url: https://spinitron.com/api
 info:
   title: Spinitron v2 API
   version: 1.0.0
-  description: |
+  description: >
     ## Notes
 
-    **Tutorial demo** using this API is at [https://spinitron.com/v2-api-demo/](https://spinitron.com/v2-api-demo/). For web integration using iframes and/or JavaScript instead of an API, see [https://spinitron.github.io/v2-web-integration/](https://spinitron.github.io/v2-web-integration/).
 
-    **Your API key** is found in the Spinitron web app. Log in to Spinitron and go to *Automation & API* in the *Admin* menu.
+    **Tutorial demo** using this API is at
+    [https://spinitron.com/v2-api-demo/](https://spinitron.com/v2-api-demo/).
+    For web integration using iframes and/or JavaScript instead of an API, see
+    [https://spinitron.github.io/v2-web-integration/](https://spinitron.github.io/v2-web-integration/).
 
-    **Authenticate** by presenting your API key using either HTTP Bearer Authorization
-    (preferred)
+
+    **Your API key** is in the Spinitron web app. Log in to Spinitron and
+    go to *Automation & API* in the *Admin* menu.
+
+
+    **Authenticate** by presenting your API key with HTTP Bearer
+    authorization
 
         curl -H 'Authorization: Bearer YOURAPIKEY' 'https://spinitron.com/api/spins'
 
-    or in the query parameter `access-token` (less secure owing to webserver
-    log files)
+    Alternatively auth with query parameter `access-token`. Use Bearer auth if you can as
+    keys in URLs are more risky.
+    Starting October 2026, URLs in responses do not include
+    access-token.
 
-        curl 'https://spinitron.com/api/spins?access-token=YOURAPIKEY'
 
-    **Limit** per page of results is 20 by default and miximally 200.
+    **Page size** is 20 by default and 200 at most.
 
-    **Try it out** below works to
-    generate example cURL requests but not to get responses from Spinitron. We
-    do not accept queries sent from web browsers. Copy-paste the cURL commands
-    and run them from your computer.
 
-    **Cache** the data you get from the API if you are using it in web or mobile integration. It's not ok to query the API on *every* page request you serve. The [demo](https://spinitron.com/v2-api-demo/) shows how easy it can be to implement a file cache.
+    **Try it out** below generates example cURL requests but does not get
+    responses from Spinitron.
+    Copy the cURL commands and run them on your computer.
 
-    An extension to this API with access to all stations for partner applications is available. Contact us.
+
+    **Cache** data you get from the API when you use it in a web or mobile
+    integration. Do not query the API on *every* page request you serve.
+    The [demo](https://spinitron.com/v2-api-demo/) shows how to implement a
+    file cache.
 tags:
-- name: Persona
-- name: Show
-- name: Playlist
-- name: Spin
+  - name: Persona
+  - name: Show
+  - name: Playlist
+  - name: Spin
 security:
-- httpBearer: []
-- accessToken: []
+  - httpBearer: []
+  - accessToken: []
 paths:
   /personas:
     get:
       summary: Get Personas
       tags:
-      - Persona
+        - Persona
       parameters:
-      - name: name
-        in: query
-        description: Filter by Persona name
-        schema:
-          type: string
-      - $ref: '#/components/parameters/limit'
-      - $ref: '#/components/parameters/page'
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: name
+          in: query
+          description: Filter by Persona name
+          schema:
+            type: string
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The personas
@@ -62,36 +72,36 @@ paths:
             application/json:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Persona'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Persona'
             application/xml:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Persona'
-  '/personas/{id}':
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Persona'
+  /personas/{id}:
     get:
       summary: Get Persona by id
       tags:
-      - Persona
+        - Persona
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The Persona
@@ -114,93 +124,74 @@ paths:
   /shows:
     get:
       summary: >-
-        Returns scheduled shows optionally filtered by {start} and/or {end}
-        datetimes
+        Returns scheduled shows optionally filtered by `{start}` and/or `{end}`
+        date-times
       description: >
-        **Terminology**: Spinitron defines a *show* as a radio program. A show
-        can have one or more *schedules*,
-
-        each of which may specify either an *occurence* or a *repetition*, which
-        represents a set of occurences.
-
-        Thus scheduled shows have occurences that, for example, may be displayed
-        in a calendar.
+        In Spinitron, shows have recurrences which describe how the shows repeat
+        in the overall program schedule. A recurrence expands over a period of
+        time into a series of instances. Each instance corresponds to an episode
+        of a show.
 
 
-        In the response, `items` is an array of objects representing occurences
-        of scheduled shows.
+        There are two ways to search the program schedule using `GET /shows`:
+
+        1. **With** the query parameter `{end}` - returns **all** matching
+        instances of shows up to the given end time.
 
 
-        You may optionally filter `items` to a datetime *range* by including in
-        the request {start} and/or {end}
+        2. **Without** the `{end}` query parameter -
+            returns **only the first** instance of each matching show.
 
-        parameters, both of which must be no more than one hour in the past. An
-        occurence starting at {end} is
-
-        included in the reponse.
-
-
-        `itmes` can include occurences that begin *or* end within the filter
-        range. A show that goes on air before
-
-        {start} appears in `items` if it ends *after* but not *at* {start}. An
-        occurence starting at or before {end}
-
-        is included.
+        Request form **1** is useful to build displays of upcoming
+        episodes of a show. For example
+        `GET /shows?end=+1week`
+        returns all the episodes of shows from now to one week from now. You
+        could iterate the response items and convert them to boxes in a grid.
 
 
-        If the request omits the {start} parameter, the server sets its value to
-        the current time so that the filter
-
-        range's start is always defined. If the request specifies {end} then the
-        requested range is *bounded*,
-
-        otherwise it is *unbounded*.
+        Request form **2** without `{end}` is unbounded – there's no
+        limit to the number of matching instances – so it returns only the first
+        instance for each matching show. Useful to make an alphabetical list fo shows, for example.
 
 
-        For a bounded request, `items` includes *every* occurence of all shows
-        occuring in the range. The only
-
-        difference between objects in `items` representing a given show will be
-        the `start` field value.
+        In the response, `items` is an array of objects, each object
+        representing one instance of a scheduled show.
 
 
-        For an unbounded request, `items` includes *only one* occurence per
-        show, specifically, the
+        `{start}` and/or `{end}` parameters must be no more than one hour in the
+        past. An instance starting at `{end}` is included in the response. `items`
+        can include instances that begin *or* end within the requested range. An
+        instance that goes on air before `{start}` appears in `items` if it
+        ends *after* but not *at* `{start}`. An instance starting at or before
+        `{end}` is included.
 
-        next occurrence after {start} of all shows occuring after {start}.
 
-
-        Use an unbounded request to get a straight list all shows. Use a bounded
-        request to get a calendar/agenda
-
-        of shows expanded into occurrences by thir shedules and repetitions.
+        If the request omits the `{start}` parameter, the server sets its value to
+        the current time so that the filter range's start is always defined.
 
 
         Objects in `items` are ordered first by `datetime` and then by `id`.
       tags:
-      - Show
-
+        - Show
       parameters:
-      - name: start
-        description: >
-          The datetime starting from items must be returned. Maximum 1 hour in
-          past.
-        in: query
-        schema:
-          type: string
-          format: date-time
-      - name: end
-        description: |
-          The ending datetime. Maximum 1 hour in past.
-        in: query
-        schema:
-          type: string
-          format: date-time
-      - $ref: '#/components/parameters/limit'
-      - $ref: '#/components/parameters/page'
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: start
+          description: >
+            Datetime from which to return items. At most 1 hour in the past.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: end
+          description: |
+            End datetime. At most 1 hour in the past.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The shows
@@ -208,27 +199,27 @@ paths:
             application/json:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Show'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Show'
             application/xml:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Show'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Show'
         '422':
           description: >
-            Invalid datetimes in filter: either too old or {end} is less than
-            {start}.
+            Invalid datetimes in the filter: they are too old, or `{end}` is
+            earlier than `{start}`.
           content:
             application/json:
               schema:
@@ -236,27 +227,26 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/Error'
-  '/shows/{id}':
+  /shows/{id}:
     get:
       summary: Get a Show by id
       description: >
-        The response object represents the next occurence of the show specified
-        by {id}.
+        The response object represents the next instance (episode) of the show specified
+        by `{id}`.
 
 
-        Status 404 is returned if a show with {id} does not exist or if it does
-        but all its scheduled occurences elapsed in the past.
+        Status 404 is returned if a show with `{id}` does not exist or if it does
+        but all its scheduled instances have elapsed.
       tags:
-      - Show
-
+        - Show
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The Show
@@ -278,48 +268,61 @@ paths:
                 $ref: '#/components/schemas/Error'
   /playlists:
     get:
-      summary: 'Returns playlists optionally filtered by {start} and/or {end} datetimes'
+      summary: Returns playlists optionally filtered by {start} and/or {end} datetimes
       description: >
-        Get Playlists optionally filtered by a datetime range.
+        Get playlists, optionally filtered by a datetime range.
 
-        Only past Playlists will be returned (with allowed tolerance equals 1
-        hour in future).
+        Only past playlists are returned. A playlist up to 1 hour in the future
+        is included. Ordered from newest to oldest.
 
 
-        Ordered chronologically from newest to oldest.
+        With `future=1`, returns playlists that have not ended and are marked
+        for public display before they air, including ones currently on air.
+        `start` and `end` do not filter that result. Ordered from soonest to
+        latest.
       tags:
-      - Playlist
-
+        - Playlist
       parameters:
-      - name: start
-        description: >
-          The datetime starting from items must be returned. Maximum 1 hour in
-          future.
-        in: query
-        schema:
-          type: string
-          format: date-time
-      - name: end
-        description: |
-          The ending datetime. Maximum 1 hour in future.
-        in: query
-        schema:
-          type: string
-          format: date-time
-      - name: show_id
-        description: Filter by show
-        in: query
-        schema:
-          type: integer
-      - name: persona_id
-        description: Filter by persona
-        in: query
-        schema:
-          type: integer
-      - $ref: '#/components/parameters/limit'
-      - $ref: '#/components/parameters/page'
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: start
+          description: >
+            Datetime from which to return items. At most 1 hour in the future.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: end
+          description: |
+            End datetime. At most 1 hour in the future.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: show_id
+          description: Filter by show
+          in: query
+          schema:
+            type: integer
+        - name: persona_id
+          description: Filter by persona
+          in: query
+          schema:
+            type: integer
+        - name: future
+          description: >
+            Set to `1` to list playlists that have not ended and are marked
+            "Display as a future public playlist", including ones currently on
+            air. `show_id` and `persona_id` still apply. `start` and `end` do
+            not filter this result. Ordered from soonest to latest. Any other
+            value leaves the default past-playlist list.
+          in: query
+          schema:
+            type: integer
+            enum:
+              - 1
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The playlists
@@ -327,44 +330,42 @@ paths:
             application/json:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Playlist'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Playlist'
             application/xml:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Playlist'
-  '/playlists/{id}':
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Playlist'
+  /playlists/{id}:
     get:
       summary: Get a Playlist by id
       description: >
-        The response object represents the playlist specified by {id}.
+        The response object represents the playlist specified by `{id}`.
 
 
-        Status 404 is returned if a playlist with {id} does not exist or if it
-        does but starts in the future (with allowed tolerance equals 1 hour in
-        future).
+        Status 404 is returned if a playlist with `{id}` does not exist, or if
+        it exists but starts more than 1 hour in the future.
       tags:
-      - Playlist
-
+        - Playlist
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The playlist
@@ -376,7 +377,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Playlist'
         '404':
-          description: Playlist not found or is in the future
+          description: Playlist not found, or it is in the future
           content:
             application/json:
               schema:
@@ -386,42 +387,41 @@ paths:
                 $ref: '#/components/schemas/Error'
   /spins:
     get:
-      summary: 'Returns spins optionally filtered by {start} and/or {end} datetimes'
+      summary: Returns spins optionally filtered by {start} and/or {end} datetimes
       description: >
         Get Spins optionally filtered by a datetime range. Only past Spins will
         be returned.
       tags:
-      - Spin
-
+        - Spin
       parameters:
-      - name: start
-        description: |
-          The datetime starting from items must be returned.
-        in: query
-        schema:
-          type: string
-          format: date-time
-      - name: end
-        description: |
-          The ending datetime.
-        in: query
-        schema:
-          type: string
-          format: date-time
-      - name: playlist_id
-        description: Filter by playlist
-        in: query
-        schema:
-          type: integer
-      - name: show_id
-        description: Filter by show
-        in: query
-        schema:
-          type: integer
-      - $ref: '#/components/parameters/limit'
-      - $ref: '#/components/parameters/page'
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: start
+          description: |
+            Datetime from which to return items.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: end
+          description: |
+            The ending datetime.
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: playlist_id
+          description: Filter by playlist
+          in: query
+          schema:
+            type: integer
+        - name: show_id
+          description: Filter by show
+          in: query
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The spins
@@ -429,31 +429,31 @@ paths:
             application/json:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Spin'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Spin'
             application/xml:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BaseIndexResponse'
-                - type: object
-                  properties:
-                    items:
-                      type: array
+                  - $ref: '#/components/schemas/BaseIndexResponse'
+                  - type: object
+                    properties:
                       items:
-                        $ref: '#/components/schemas/Spin'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Spin'
     post:
       summary: Log a Spin
       tags:
-      - Spin
+        - Spin
       description: An endpoint for automation systems to log spins into the spin table.
       responses:
         '201':
-          description: The new created Spin.
+          description: The newly created spin.
           content:
             application/json:
               schema:
@@ -475,7 +475,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/ValidationError'
         default:
-          description: Failed to create the object for unknown reason.
+          description: Failed to create the spin for an unknown reason.
           content:
             application/json:
               schema:
@@ -517,22 +517,21 @@ paths:
                 isrc:
                   type: string
               required:
-              - artist
-              - song
-  '/spins/{id}':
+                - artist
+                - song
+  /spins/{id}:
     get:
       summary: Get a Spin by id
       tags:
-      - Spin
-
+        - Spin
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-      - $ref: '#/components/parameters/fields'
-      - $ref: '#/components/parameters/expand'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/fields'
+        - $ref: '#/components/parameters/expand'
       responses:
         '200':
           description: The spin
@@ -556,7 +555,7 @@ components:
   parameters:
     limit:
       name: count
-      description: Amount of items to return
+      description: Number of items to return
       in: query
       schema:
         type: integer
@@ -564,14 +563,14 @@ components:
         default: 20
     page:
       name: page
-      description: 'Offset, used together with count'
+      description: Offset, used together with count
       in: query
       schema:
         type: integer
         minimum: 1
     fields:
       name: fields
-      description: Allows to select only needed fields
+      description: Return only these fields
       in: query
       schema:
         type: array
@@ -579,7 +578,7 @@ components:
           type: string
     expand:
       name: expand
-      description: Allows to select extra fields
+      description: Include these extra fields
       in: query
       schema:
         type: array
@@ -596,7 +595,9 @@ components:
       name: access-token
   schemas:
     Persona:
-      description: The `Persona` object describes a radio DJ/host. One person can have multiple personas
+      description: >-
+        The `Persona` object describes a radio DJ/host. One person can have
+        multiple personas.
       type: object
       properties:
         id:
@@ -609,7 +610,9 @@ components:
         bio:
           type: string
           description: HTML-formatted biography
-          example: <p>Besides DJ'ing industrial and experimental music since 1991, Deftly has performed in industrial ...
+          example: >-
+            <p>Besides DJ'ing industrial and experimental music since 1991,
+            Deftly has performed in industrial ...
         since:
           type: integer
           format: year
@@ -619,16 +622,17 @@ components:
           type: string
           format: email
           description: DJ/host's email address
-          example: "example@spinitron.com"
+          example: example@spinitron.com
         website:
           type: string
           format: url
-          description: URL to web site for the DJ/host
-          example: "https://spinitron.com/example/doesnt/exist"
+          description: Website URL for the DJ/host
+          example: https://spinitron.com/example/doesnt/exist
         image:
           type: string
           format: url
-          example: https://spinitron.com/images/Persona/28/2832-img_profile-original.jpg
+          example: >-
+            https://spinitron.com/images/Persona/28/2832-img_profile-original.jpg
         _links:
           type: object
           properties:
@@ -640,7 +644,10 @@ components:
                 $ref: '#/components/schemas/Link'
     Show:
       type: object
-      description: A `Show` object describes one occurrence of a radio program. A result set may contain multiple occurrences of the same show with difference `start` and `end` values.
+      description: >-
+        A `Show` object describes one instance (episode) of a radio program. A result
+        set may contain multiple instances of the same show with different
+        `start` and `end` values.
       properties:
         id:
           type: integer
@@ -648,13 +655,13 @@ components:
         start:
           type: string
           format: date-time
-          description: UTC datetime ISO-8601
-          example: "2018-04-02T23:00:00+0000"
+          description: UTC datetime in ISO-8601
+          example: 2018-04-02T23:00:00+0000
         end:
           type: string
           format: date-time
-          description: UTC datetime ISO-8601
-          example: "2018-04-03T02:00:00+0000"
+          description: UTC datetime in ISO-8601
+          example: 2018-04-03T02:00:00+0000
         duration:
           type: integer
           description: Duration in seconds
@@ -678,7 +685,12 @@ components:
         description:
           type: string
           description: HTML-formatted description of the playlist or program/show
-          example: <p>Since 2001, <strong>The High Voltage Circumcision</strong> show has delivered a full spectrum barrage of dark hard and experimental music from industrial to noise to idm to ebm to bizarre to audio collage often with a side of live guests, social consciousness, interviews, twisted humor, studio experiments and left turns.</p>
+          example: >-
+            <p>Since 2001, <strong>The High Voltage Circumcision</strong> show
+            has delivered a full spectrum barrage of dark hard and experimental
+            music from industrial to noise to idm to ebm to bizarre to audio
+            collage often with a side of live guests, social consciousness,
+            interviews, twisted humor, studio experiments and left turns.</p>
         since:
           type: integer
           format: year
@@ -687,11 +699,13 @@ components:
         url:
           type: string
           format: url
-          description: URL to web site for the program/show
-          example: "https://spinitron.com/example/doesnt/exist"
+          description: Website URL for the program/show
+          example: https://spinitron.com/example/doesnt/exist
         hide_dj:
           type: boolean
-          description: Should the client application hide information about the show's DJs/hosts?
+          description: >-
+            Should the client application hide information about the show's
+            DJs/hosts?
           example: false
         image:
           type: string
@@ -723,12 +737,12 @@ components:
         start:
           type: string
           format: date-time
-          description: UTC datetime ISO-8601
+          description: UTC datetime in ISO-8601
           example: 2018-03-30T13:00:00+0000
         end:
           type: string
           format: date-time
-          description: UTC datetime ISO-8601
+          description: UTC datetime in ISO-8601
           example: 2018-03-30T14:00:00+0000
         duration:
           type: integer
@@ -749,7 +763,9 @@ components:
         description:
           type: string
           description: HTML-formatted description of the playlist or program/show
-          example: It is a <em>cross-­cultural musical journey united in voices and rhythms</em>.
+          example: >-
+            It is a <em>cross-­cultural musical journey united in voices and
+            rhythms</em>.
         since:
           type: integer
           format: year
@@ -758,10 +774,12 @@ components:
         url:
           type: string
           format: url
-          description: URL to web site for the playlist or program/show
+          description: Website URL for the playlist or program/show
         hide_dj:
           type: boolean
-          description: Should the client application hide information about the playlist's DJ/host?
+          description: >-
+            Should the client application hide information about the playlist's
+            DJ/host?
           example: false
         image:
           type: string
@@ -769,7 +787,8 @@ components:
           example: https://spinitron.com/images/Show/44/4498/img_show-original.jpg
         automation:
           type: boolean
-          description: Was the playlist created playlists created by a radio station automation system?
+          description: >-
+            Was this playlist created by a station automation system?
           example: false
         episode_name:
           type: string
@@ -801,12 +820,12 @@ components:
         start:
           type: string
           format: date-time
-          description: UTC datetime ISO-8601
+          description: UTC datetime in ISO-8601
           example: 2018-03-30T13:07:08+0000
         end:
           type: string
           format: date-time
-          description: UTC datetime ISO-8601
+          description: UTC datetime in ISO-8601
           example: 2018-03-30T13:10:25+0000
         duration:
           type: integer
@@ -820,7 +839,8 @@ components:
           type: string
           description: Cover art
           format: url
-          example: https://is5-ssl.mzstatic.com/image/thumb/Music3/v4/ef/e8/67/efe8674e-467a-adfe-9f67-8d50860b4f1e/dj.sokyjuyt.jpg/170x170bb.jpg
+          example: >-
+            https://is5-ssl.mzstatic.com/image/thumb/Music3/v4/ef/e8/67/efe8674e-467a-adfe-9f67-8d50860b4f1e/dj.sokyjuyt.jpg/170x170bb.jpg
         classical:
           type: boolean
           description: Is the track's metadata schema "classical" rather than "popular"?
@@ -857,7 +877,7 @@ components:
           example: 1972
         medium:
           type: string
-          description: Media format in which the sound recording was reased
+          description: Media format in which the sound recording was released
           example: 7"
         genre:
           type: string
@@ -868,8 +888,10 @@ components:
           example: Hey Bulldog
         note:
           type: string
-          description: HTML-formatted DJ annotation of the spin, can include images etc.
-          example: B-side of the <strong>original</strong> 7" vinyl in the station's collection.
+          description: HTML-formatted DJ annotation of the spin. It can include images.
+          example: >-
+            B-side of the <strong>original</strong> 7" vinyl in the station's
+            collection.
         request:
           type: boolean
           description: Was the spin requested by a listener?
@@ -884,11 +906,13 @@ components:
           example: false
         work:
           type: string
-          description: For classical music, the main compositional work the track (see `song` field) belongs to
+          description: >-
+            For classical music, the main compositional work the track (see
+            `song` field) belongs to
           example: The Marriage of Figaro
         conductor:
           type: string
-          description: For classical music, conducor of the ensemble
+          description: For classical music, conductor of the ensemble
           example: Herbert von Karajan
         performers:
           type: string
@@ -908,7 +932,7 @@ components:
         upc:
           type: string
           description: Universal Product Code of the release
-          example: "4006408126775"
+          example: '4006408126775'
         iswc:
           type: string
           example: T-010.434.166-3
