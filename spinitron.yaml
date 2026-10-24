@@ -154,6 +154,10 @@ paths:
         instance for each matching show. Useful to make an alphabetical list fo shows, for example.
 
 
+        In Spinitron's ontology, a `one_off` show and a future public playlist both preempt
+        instances of recurring shows.
+
+
         In the response, `items` is an array of objects, each object
         representing one instance of a scheduled show.
 
@@ -280,6 +284,7 @@ paths:
         for public display before they air, including ones currently on air.
         `start` and `end` do not filter that result. Ordered from soonest to
         latest.
+
       tags:
         - Playlist
       parameters:
@@ -314,6 +319,8 @@ paths:
             air. `show_id` and `persona_id` still apply. `start` and `end` do
             not filter this result. Ordered from soonest to latest. Any other
             value leaves the default past-playlist list.
+            In Spinitron's ontology, a `one_off` show and a future public playlist both preempt
+            instances of recurring shows.
           in: query
           schema:
             type: integer
